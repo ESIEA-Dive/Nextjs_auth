@@ -1,6 +1,18 @@
-import '../styles/globals.css'
-import type { AppProps } from 'next/app'
+import type { AppProps } from "next/app";
+import { SessionProvider } from "next-auth/react";
+import Navbar from "../component/Navbar";
+import { ChakraProvider } from "@chakra-ui/react";
 
-export default function App({ Component, pageProps }: AppProps) {
-  return <Component {...pageProps} />
+function MyApp({ Component, pageProps: { session, ...pageProps } }: AppProps) {
+  return (
+    <ChakraProvider>
+      <SessionProvider session={session}>
+        <Navbar />
+        <Component {...pageProps} />
+      </SessionProvider>
+    </ChakraProvider>
+  );
 }
+
+export default MyApp;
+
