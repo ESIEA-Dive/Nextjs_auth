@@ -176,7 +176,7 @@ export async function getServerSideProps(context: any) {
     const res = await fetch(process.env.API_URL + "users/" + email)
     const user = await res.json()*/
 
-    const email = context.params.email;
+    const email = decodeURIComponent(context.params.email);
     await dbConnect()
     const user = await User.findOne({ email: email }).lean()
     if (user !== null) {

@@ -27,17 +27,4 @@ const Home: NextPage = () => {
   );
 };
 
-
-export async function getServerSideProps(context: any) {
-  const res = await fetch(process.env.API_URL + "users")
-  const user = await res.json()
-
-  return {
-      props: {
-          user,
-          url: process.env.API_URL
-      }
-  }
-}
-
 export default Home;

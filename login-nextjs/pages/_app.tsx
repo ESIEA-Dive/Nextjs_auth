@@ -7,7 +7,7 @@ function MyApp({ Component, pageProps: { session, ...pageProps } }: AppProps) {
   return (
     <ChakraProvider>
       <SessionProvider session={session}>
-        <Navbar {...pageProps}/>
+        <Navbar />
         <Component {...pageProps} />
       </SessionProvider>
     </ChakraProvider>
