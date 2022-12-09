@@ -2,7 +2,6 @@ import { NextApiRequest, NextApiResponse } from "next";
 import dbConnect from "../../../lib/dbConnect";
 import { ResponseFuncs } from "../../../lib/types";
 import User from "../../../model/User";
-import { useSession } from "next-auth/react";
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   //capture request method, we type it as a key of ResponseFunc to reduce typing later
@@ -16,7 +15,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     // RESPONSE FOR GET REQUESTS
     GET: async (req: NextApiRequest, res: NextApiResponse) => {
       await dbConnect(); // connect to database
-      res.json(await User.find({ email: "ouioui@gmail.com" }).catch(catcher))
+      res.json(await User.find({ email: "deora@gmail.com" }).catch(catcher))
     },
     // RESPONSE POST REQUESTS
     POST: async (req: NextApiRequest, res: NextApiResponse) => {

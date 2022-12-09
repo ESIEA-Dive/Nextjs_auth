@@ -1,8 +1,9 @@
 import { User } from "../../lib/types"
 import { useRouter } from "next/router"
 import { useState } from "react"
-import { Heading, Text, Container, Center, VStack, Button, useDisclosure, Modal, ModalOverlay, ModalContent, ModalHeader, ModalCloseButton, ModalFooter, Image, HStack } from "@chakra-ui/react";
+import { Input, Heading, Text, Container, Center, VStack, Button, useDisclosure, Modal, ModalOverlay, ModalContent, ModalHeader, ModalCloseButton, ModalFooter, Image, HStack } from "@chakra-ui/react";
 import { useSession } from "next-auth/react";
+import { EditIcon, CheckIcon } from "@chakra-ui/icons";
 
 const pictos = [
     {
@@ -37,8 +38,11 @@ interface ShowProps {
     url: string
 }
 
-
 function Show(props: ShowProps) {
+
+    console.log("--ici--")
+    console.log(props.user)
+    console.log("--ici--")
 
     const router = useRouter()
     const [user, setUser] = useState<User>(props.user[0])
@@ -46,34 +50,51 @@ function Show(props: ShowProps) {
     const { isOpen, onOpen, onClose } = useDisclosure()
     const [imgIndex, setImgIndex] = useState(0);
     const [pictoSelected, setPictoSelected] = useState(session?.user?.image || pictos[0].url);
-    const [userPicture, setUserPicture] = useState(session?.user?.image || user.image || 'https://cdn-icons-png.flaticon.com/512/149/149071.png');
+    const [userPicture, setUserPicture] = useState(user.image || session?.user?.image || 'https://cdn-icons-png.flaticon.com/512/149/149071.png');
+    const [editName, setEditName] = useState(false);
+    const [editEmail, setEditEmail] = useState(false);
+    const [valueName, setValueName] = useState(user.name || session?.user?.name || undefined);
+    const [valueEmail, setValueEmail] = useState(user.email || session?.user?.email || undefined);
+    const handleChangeName = (event: any) => setValueName(event.target.value);
+    const handleChangeEmail = (event: any) => setValueEmail(event.target.value);
 
-    // function to complete a todo
     const updatePicture = async () => {
-        setUserPicture(pictoSelected);
+        setUserPicture(pictoSelected)
         const newUser = { ...user, image: pictoSelected }
-        // make api call to change completed in database
         await fetch(props.url + "users/" + user._id, {
             method: "put",
             headers: {
                 "Content-Type": "application/json",
             },
-            // send copy of todo with property
             body: JSON.stringify(newUser),
         })
         setUser(newUser)
     }
 
-    // function for handling clicking the delete button
-    /*const handleDelete = async () => {
+    const updateEmail = async () => {
+        const newUser = { ...user, email: valueEmail ? valueEmail : user.email }
         await fetch(props.url + "users/" + user._id, {
-            method: "delete",
+            method: "put",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify(newUser),
         })
-        //push user back to main page after deleting
-        router.push("/")
-    }*/
+        setUser(newUser)
+    }
 
-    //return JSX
+    const updateName = async () => {
+        const newUser = { ...user, name: valueName ? valueName : user.name }
+        await fetch(props.url + "users/" + user._id, {
+            method: "put",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify(newUser),
+        })
+        setUser(newUser)
+    }
+
     return (
         <Container>
             <Center>
@@ -131,22 +152,29 @@ function Show(props: ShowProps) {
                         Change picture
                     </Button>
                     <Text color="gray" fontSize={30}>Name</Text>
-                    <Text color="teal" fontWeight={600} fontSize={15}>{session?.user?.name}</Text>
+                    <HStack spacing='24px'>
+                        {!editName && (<Text color="teal" fontSize={15}>{valueName}</Text>)}
+                        {editName && (<Input value={valueName} onChange={handleChangeName} variant="flushed" placeholder="New name" size="sm" />)}
+                        {!editName && (<Button onClick={() => { setEditName(true) }} leftIcon={<EditIcon />} colorScheme='teal' variant='solid'>Edit</Button>)}
+                        {editName && (<Button onClick={() => { setEditName(false); updateName(); }} leftIcon={<CheckIcon />} colorScheme='teal' variant='solid'>Valider</Button>)}
+                    </HStack>
                     <Text color="gray" fontSize={30}>Email</Text>
-                    <Text color="teal" fontWeight={600} fontSize={15}>{session?.user?.email}</Text>
+                    <HStack spacing='24px'>
+                        {!editEmail && (<Text color="teal" fontSize={15}>{valueEmail}</Text>)}
+                        {editEmail && (<Input value={valueEmail} onChange={handleChangeEmail} variant="flushed" placeholder="New email" size="sm" />)}
+                        {!editEmail && (<Button onClick={() => { setEditEmail(true) }} leftIcon={<EditIcon />} colorScheme='teal' variant='solid'>Edit</Button>)}
+                        {editEmail && (<Button onClick={() => { setEditEmail(false); updateEmail(); }} leftIcon={<CheckIcon />} colorScheme='teal' variant='solid'>Valider</Button>)}
+                    </HStack>
                 </VStack>
             </Center>
         </Container>
     )
 }
 
-// Define Server Side Props
 export async function getServerSideProps(context: any) {
-    // fetch the todo, the param was received via context.query.id
     const res = await fetch(process.env.API_URL + "users")
     const user = await res.json()
 
-    //return the serverSideProps the todo and the url from out env variables for frontend api calls
     return {
         props: {
             user,
@@ -155,5 +183,4 @@ export async function getServerSideProps(context: any) {
     }
 }
 
-// export component
 export default Show
