@@ -15,7 +15,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     // RESPONSE FOR GET REQUESTS
     GET: async (req: NextApiRequest, res: NextApiResponse) => {
       await dbConnect(); // connect to database
-      res.json(await User.find({ email: "deora@gmail.com" }).catch(catcher))
+      res.json(await User.find({}).catch(catcher))
     },
     // RESPONSE POST REQUESTS
     POST: async (req: NextApiRequest, res: NextApiResponse) => {

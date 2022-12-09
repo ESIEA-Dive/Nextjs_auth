@@ -1,9 +1,9 @@
-import { User } from "../../lib/types"
-import { useRouter } from "next/router"
 import { useState } from "react"
 import { Input, Heading, Text, Container, Center, VStack, Button, useDisclosure, Modal, ModalOverlay, ModalContent, ModalHeader, ModalCloseButton, ModalFooter, Image, HStack } from "@chakra-ui/react";
 import { useSession } from "next-auth/react";
 import { EditIcon, CheckIcon } from "@chakra-ui/icons";
+import dbConnect from "../../lib/dbConnect";
+import User from "../../model/User";
 
 const pictos = [
     {
@@ -34,27 +34,24 @@ const pictos = [
 
 // Define Prop Interface
 interface ShowProps {
-    user: User
+    user: any
     url: string
 }
 
 function Show(props: ShowProps) {
 
-    console.log("--ici--")
-    console.log(props.user)
-    console.log("--ici--")
-
-    const router = useRouter()
-    const [user, setUser] = useState<User>(props.user[0])
     const { data: session } = useSession();
-    const { isOpen, onOpen, onClose } = useDisclosure()
+    const [user, setUser] = useState(props.user);
+
+    const { isOpen, onOpen, onClose } = useDisclosure();
     const [imgIndex, setImgIndex] = useState(0);
-    const [pictoSelected, setPictoSelected] = useState(session?.user?.image || pictos[0].url);
+    const [pictoSelected, setPictoSelected] = useState(user.image || session?.user?.image || pictos[0].url);
     const [userPicture, setUserPicture] = useState(user.image || session?.user?.image || 'https://cdn-icons-png.flaticon.com/512/149/149071.png');
+
     const [editName, setEditName] = useState(false);
     const [editEmail, setEditEmail] = useState(false);
-    const [valueName, setValueName] = useState(user.name || session?.user?.name || undefined);
-    const [valueEmail, setValueEmail] = useState(user.email || session?.user?.email || undefined);
+    const [valueName, setValueName] = useState(user.name || session?.user?.name || "name");
+    const [valueEmail, setValueEmail] = useState(user.email || session?.user?.email || "email");
     const handleChangeName = (event: any) => setValueName(event.target.value);
     const handleChangeEmail = (event: any) => setValueEmail(event.target.value);
 
@@ -171,9 +168,20 @@ function Show(props: ShowProps) {
     )
 }
 
+export default Show
+
 export async function getServerSideProps(context: any) {
-    const res = await fetch(process.env.API_URL + "users")
-    const user = await res.json()
+
+    /*const email = "deora@gmail.com"
+    const res = await fetch(process.env.API_URL + "users/" + email)
+    const user = await res.json()*/
+
+    const email = context.params.email;
+    await dbConnect()
+    const user = await User.findOne({ email: email }).lean()
+    if (user !== null) {
+        user._id = user._id.toString()
+    }
 
     return {
         props: {
@@ -182,5 +190,3 @@ export async function getServerSideProps(context: any) {
         }
     }
 }
-
-export default Show

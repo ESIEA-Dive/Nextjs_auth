@@ -8,15 +8,19 @@ function Navbar() {
 
   return (
     <Flex justifyContent="space-around" p={20}>
-      <Button>
-        <NextLink href="/">Home</NextLink>
-      </Button>
-      {session &&(<Button>
-        <NextLink href="/profile">Profile</NextLink>
-      </Button>)}
-      <Button>
-        <NextLink href="/auth">Auth</NextLink>
-      </Button>
+
+      <NextLink href="/">
+        <Button>Home</Button>
+      </NextLink>
+
+      {session && (<NextLink href={"/profile/"+session.user?.email}>
+        <Button>Profile</Button>
+      </NextLink>)}
+
+      <NextLink href="/auth">
+        <Button>Auth</Button>
+      </NextLink>
+
     </Flex>
   );
 };
