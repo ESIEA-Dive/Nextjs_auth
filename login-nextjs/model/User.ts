@@ -20,9 +20,6 @@ const userSchema = new Schema({
   },
   image: {
     type: String,
-  },
-  id: {
-    type: Number,
   }
 });
 
