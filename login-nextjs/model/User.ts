@@ -21,6 +21,9 @@ const userSchema = new Schema({
   image: {
     type: String,
   },
+  id: {
+    type: Number,
+  }
 });
 
 const User = mongoose.models.User || mongoose.model("User", userSchema);

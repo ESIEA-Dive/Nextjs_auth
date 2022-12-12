@@ -59,6 +59,22 @@ export default NextAuth({
     signIn: "/auth",
   },
   debug: process.env.NODE_ENV === "development",
+  callbacks: {
+    async jwt({ token, user }) {
+      user && (token.user = user)
+      return token
+    },
+    async session({ session, token }) {
+      session = {
+        ...session,
+        user: {
+          id: token.user._id,
+          ...session.user
+        }
+      }
+      return session
+    }
+  },
   adapter: MongoDBAdapter(clientPromise),
   session: {
     strategy: "jwt",

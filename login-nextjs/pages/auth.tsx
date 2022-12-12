@@ -1,6 +1,6 @@
 import { useState } from "react";
 import type { NextPage } from "next";
-import { useSession, signIn, getProviders } from "next-auth/react";
+import { signIn, getProviders } from "next-auth/react";
 import {
   Button,
   Flex,

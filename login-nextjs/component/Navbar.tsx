@@ -13,7 +13,7 @@ function Navbar() {
         <Button>Home</Button>
       </NextLink>
 
-      {session && (<NextLink href={"/profile/"+(encodeURIComponent(session.user?.email || ""))}>
+      {session && (<NextLink href={"/profile/"+session.user?.id || ""}>
         <Button>Profile</Button>
       </NextLink>)}
 

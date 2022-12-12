@@ -171,22 +171,10 @@ function Show(props: ShowProps) {
 export default Show
 
 export async function getServerSideProps(context: any) {
-
-    /*const email = "deora@gmail.com"
-    const res = await fetch(process.env.API_URL + "users/" + email)
-    const user = await res.json()*/
-
-    const email = decodeURIComponent(context.params.email);
-    await dbConnect()
-    const user = await User.findOne({ email: email }).lean()
-    if (user !== null) {
-        user._id = user._id.toString()
-    }
-
-    return {
-        props: {
-            user,
-            url: process.env.API_URL
-        }
-    }
-}
+    // fetch the todo, the param was received via context.query.id
+    const res = await fetch(process.env.API_URL + "users/" + context.query.id)
+    const user = await res.json()
+  
+    //return the serverSideProps the todo and the url from out env variables for frontend api calls
+    return { props: { user, url: process.env.API_URL } }
+  }

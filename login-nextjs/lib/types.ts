@@ -8,7 +8,7 @@ export interface ResponseFuncs {
 
 // Interface to define our Todo model on the frontend
 export interface User {
-  _id?: number
+  id: number
   name: string
   email: string
   hashedPassword: string
