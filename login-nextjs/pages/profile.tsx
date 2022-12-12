@@ -170,10 +170,18 @@ export default Show
 
 export async function getServerSideProps(context: any) {
     const session = await getSession(context);
-    const res = await fetch(process.env.API_URL + "users/" + session?.user?.id)
+    const res = await fetch(process.env.API_URL + "users/" + session?.user?.id);
     const user = await res.json()
-
-    //return the serverSideProps the todo and the url from out env variables for frontend api calls
+    if (session?.user) {
+        if (!user.filledForm)
+            return {
+                redirect: {
+                    permanent: false,
+                    destination: "/form",
+                },
+                props: {},
+            }
+    }
     return {
         props: {
             user: user,

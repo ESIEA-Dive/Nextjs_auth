@@ -6,7 +6,7 @@ export interface ResponseFuncs {
   DELETE?: Function
 }
 
-// Interface to define our Todo model on the frontend
+// Interface to define our User model on the frontend
 export interface User {
   id: number
   name: string
@@ -14,4 +14,30 @@ export interface User {
   hashedPassword: string
   image: string
   filledForm: boolean
+}
+
+// Interface to define our Form model on the frontend
+export interface Form {
+  userId: string
+  qstEmotion1: string
+  qstEmotion2: string
+  qstEmotion3: string
+  qstPhysical1: string
+  qstPhysical2: string
+  qstPhysical3: string
+  qstMental1: string
+  qstMental2: string
+  qstSpiritual1: string
+  qstSpiritual2: string
+  qstSocial1: string
+  qstSocial2: string
+  qstSocial3: string
+  qstEnvironmental1: string
+  qstEnvironmental2: string
+  qstEnvironmental3: string
+  qstFinancial1: string
+  qstFinancial2: string
+  qstFinancial3: string
+  qstOccupational1: string
+  qstOccupational2: string
 }

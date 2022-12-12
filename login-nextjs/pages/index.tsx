@@ -1,6 +1,7 @@
 import type { NextPage } from "next";
 import { useSession, signIn, signOut, getSession } from "next-auth/react";
 import { Flex, Button, Text, Heading } from "@chakra-ui/react";
+import Router from "next/router";
 
 const Home: NextPage = () => {
   const { data: session } = useSession();
@@ -32,14 +33,20 @@ export default Home;
 
 export async function getServerSideProps(context: any) {
   const session = await getSession(context);
-  const result = await fetch(process.env.API_URL + "users/" + session?.user?.id, {
-    method: "get",
-  })
-  const user = await result.json();
-  return {
-    props: {
-      url: process.env.API_URL,
-      user: user,
+  if (session?.user) {
+    const result = await fetch(process.env.API_URL + "users/" + session?.user?.id);
+    const user = await result.json();
+    if(!user.filledForm)
+    return{
+      redirect: {
+        permanent: false,
+        destination: "/form",
+      },
+      props:{},
     }
+  }
+
+  return {
+    props:{},
   }
 }
