@@ -105,7 +105,7 @@ const Auth: NextPage = ({ providers }: any) => {
     const { pathname } = Router;
     if (pathname === "/auth") {
       // TODO: redirect to a success register page
-      Router.push("/");
+      Router.push("/form");
     }
   };
 
