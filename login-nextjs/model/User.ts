@@ -20,7 +20,10 @@ const userSchema = new Schema({
   },
   image: {
     type: String,
-  }
+  },
+  filledForm: {
+    type: Boolean
+  },
 });
 
 const User = mongoose.models.User || mongoose.model("User", userSchema);

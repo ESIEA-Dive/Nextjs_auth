@@ -67,6 +67,7 @@ export default async function handler(
     name: username,
     email,
     hashedPassword,
+    filledForm: true,
   });
 
   newUser

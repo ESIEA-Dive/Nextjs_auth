@@ -1,5 +1,5 @@
 import type { NextPage } from "next";
-import { useSession, signIn, signOut } from "next-auth/react";
+import { useSession, signIn, signOut, getSession } from "next-auth/react";
 import { Flex, Button, Text, Heading } from "@chakra-ui/react";
 
 const Home: NextPage = () => {
@@ -28,3 +28,18 @@ const Home: NextPage = () => {
 };
 
 export default Home;
+
+
+export async function getServerSideProps(context: any) {
+  const session = await getSession(context);
+  const result = await fetch(process.env.API_URL + "users/" + session?.user?.id, {
+    method: "get",
+  })
+  const user = await result.json();
+  return {
+    props: {
+      url: process.env.API_URL,
+      user: user,
+    }
+  }
+}

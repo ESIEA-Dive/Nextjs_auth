@@ -1,9 +1,7 @@
 import { useState } from "react"
 import { Input, Heading, Text, Container, Center, VStack, Button, useDisclosure, Modal, ModalOverlay, ModalContent, ModalHeader, ModalCloseButton, ModalFooter, Image, HStack } from "@chakra-ui/react";
-import { useSession } from "next-auth/react";
+import { useSession, getSession } from "next-auth/react";
 import { EditIcon, CheckIcon } from "@chakra-ui/icons";
-import dbConnect from "../../lib/dbConnect";
-import User from "../../model/User";
 
 const pictos = [
     {
@@ -171,10 +169,15 @@ function Show(props: ShowProps) {
 export default Show
 
 export async function getServerSideProps(context: any) {
-    // fetch the todo, the param was received via context.query.id
-    const res = await fetch(process.env.API_URL + "users/" + context.query.id)
+    const session = await getSession(context);
+    const res = await fetch(process.env.API_URL + "users/" + session?.user?.id)
     const user = await res.json()
-  
+
     //return the serverSideProps the todo and the url from out env variables for frontend api calls
-    return { props: { user, url: process.env.API_URL } }
-  }
+    return {
+        props: {
+            user: user,
+            url: process.env.API_URL
+        }
+    }
+}

@@ -1,6 +1,6 @@
 import { useState } from "react";
 import type { NextPage } from "next";
-import { signIn, getProviders } from "next-auth/react";
+import { signIn, getProviders, useSession } from "next-auth/react";
 import {
   Button,
   Flex,
@@ -104,7 +104,7 @@ const Auth: NextPage = ({ providers }: any) => {
   const redirectToHome = () => {
     const { pathname } = Router;
     if (pathname === "/auth") {
-      // TODO: redirect to a success register page
+      // TODO: redirect to a form to fill
       Router.push("/form");
     }
   };
@@ -144,7 +144,6 @@ const Auth: NextPage = ({ providers }: any) => {
 
   const formSubmit = (actions: any) => {
     actions.setSubmitting(false);
-
     authType === "Login" ? loginUser() : registerUser();
   };
 

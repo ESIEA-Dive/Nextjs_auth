@@ -68,7 +68,7 @@ export default NextAuth({
       session = {
         ...session,
         user: {
-          id: token.user._id,
+          id: token.sub,
           ...session.user
         }
       }
