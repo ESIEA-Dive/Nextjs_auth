@@ -7,6 +7,26 @@ const formSchema = new Schema({
     type: String,
     required: true,
   },
+  qstUniversity: {
+    type: String,
+    required: true,
+  },
+  qstYear: {
+    type: String,
+    required: true,
+  },
+  qstSport: {
+    type: String,
+    required: true,
+  },
+  qstSex: {
+    type: String,
+    required: true,
+  },
+  qstIdol: {
+    type: String,
+    required: true,
+  },
   qstEmotion1: {
     type: String,
     required: true,
@@ -16,7 +36,7 @@ const formSchema = new Schema({
     required: true,
   },
   qstEmotion3: {
-    type: String,
+    type: Number,
     required: true,
   },
   qstPhysical1: {
@@ -60,7 +80,7 @@ const formSchema = new Schema({
     required: true,
   },
   qstEnvironmental1: {
-    type: String,
+    type: Number,
     required: true,
   },
   qstEnvironmental2: {
@@ -72,7 +92,7 @@ const formSchema = new Schema({
     required: true,
   },
   qstFinancial1: {
-    type: String,
+    type: Number,
     required: true,
   },
   qstFinancial2: {

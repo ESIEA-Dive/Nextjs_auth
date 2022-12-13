@@ -1,4 +1,4 @@
-import { Heading, Text, Center, VStack, HStack, RadioGroup, Radio, Button, FormControl, FormLabel } from "@chakra-ui/react";
+import { Heading, Text, Center, VStack, HStack, RadioGroup, Radio, Button, FormControl, FormLabel, Input, Select, Slider, SliderFilledTrack, SliderMark, SliderThumb, SliderTrack, Box } from "@chakra-ui/react";
 import { useSession, getSession } from "next-auth/react";
 import Router from "next/router";
 import { useState } from "react";
@@ -12,31 +12,57 @@ interface ShowProps {
 function form(props: ShowProps) {
     const { data: session } = useSession();
 
+    const [qstUniversity, setQstUniversity] = useState('');
+    const handleChangeUniversity = (event: any) => setQstUniversity(event.target.value);
+    const [qstYear, setQstYear] = useState('');
+    const handleChangeYear = (event: any) => setQstYear(event.target.value);
+    const [qstSport, setQstSport] = useState('');
+    const handleChangeSport = (event: any) => setQstSport(event.target.value);
+    const [qstSex, setQstSex] = useState('');
+    const handleChangeSex = (event: any) => setQstSex(event.target.value);
+    const [qstIdol, setQstIdol] = useState('');
+    const handleChangeIdol = (event: any) => setQstIdol(event.target.value);
+
     const [qstEmotion1, setQstEmotion1] = useState('Not at all');
+    const handleChangeEmotion1 = (event: any) => setQstEmotion1(event.target.value);
     const [qstEmotion2, setQstEmotion2] = useState('Not at all');
-    const [qstEmotion3, setQstEmotion3] = useState('1');
+    const handleChangeEmotion2 = (event: any) => setQstEmotion2(event.target.value);
+    const [qstEmotion3, setQstEmotion3] = useState(1);
     const [qstPhysical1, setQstPhysical1] = useState('Not at all');
+    const handleChangePhysical1 = (event: any) => setQstPhysical1(event.target.value);
     const [qstPhysical2, setQstPhysical2] = useState('Yes');
     const [qstPhysical3, setQstPhysical3] = useState('Nutrition');
+    const handleChangePhysical3 = (event: any) => setQstPhysical3(event.target.value);
     const [qstMental1, setQstMental1] = useState('Not at all');
+    const handleChangeMental1 = (event: any) => setQstMental1(event.target.value);
     const [qstMental2, setQstMental2] = useState('Yes');
     const [qstSpiritual1, setQstSpiritual1] = useState('Not at all');
+    const handleChangeSpiritual1 = (event: any) => setQstSpiritual1(event.target.value);
     const [qstSpiritual2, setQstSpiritual2] = useState('Yes');
     const [qstSocial1, setQstSocial1] = useState('Not at all');
+    const handleChangeSocial1 = (event: any) => setQstSocial1(event.target.value);
     const [qstSocial2, setQstSocial2] = useState('Not at all');
+    const handleChangeSocial2 = (event: any) => setQstSocial2(event.target.value);
     const [qstSocial3, setQstSocial3] = useState('Yes');
-    const [qstEnvironmental1, setQstEnvironmental1] = useState('1');
+    const [qstEnvironmental1, setQstEnvironmental1] = useState(1);
     const [qstEnvironmental2, setQstEnvironmental2] = useState('Yes');
     const [qstEnvironmental3, setQstEnvironmental3] = useState('Yes');
-    const [qstFinancial1, setQstFinancial1] = useState('1');
+    const [qstFinancial1, setQstFinancial1] = useState(1);
     const [qstFinancial2, setQstFinancial2] = useState('Completely disagree');
+    const handleChangeFinancial2 = (event: any) => setQstFinancial2(event.target.value);
     const [qstFinancial3, setQstFinancial3] = useState('Yes');
     const [qstOccupational1, setQstOccupational1] = useState('Not at all');
+    const handleChangeOccupational1 = (event: any) => setQstOccupational1(event.target.value);
     const [qstOccupational2, setQstOccupational2] = useState('Yes');
 
     const sendForm = async () => {
         const form = [{
             userId: session?.user?.id,
+            qstUniversity: qstUniversity,
+            qstYear: qstYear,
+            qstSport: qstSport,
+            qstSex: qstSex,
+            qstIdol: qstIdol,
             qstEmotion1: qstEmotion1,
             qstEmotion2: qstEmotion2,
             qstEmotion3: qstEmotion3,
@@ -89,344 +115,357 @@ function form(props: ShowProps) {
 
     return (
         <Center>
-            <VStack spacing='24px' pb={4}>
-                <Heading>Form</Heading>
-                <Text color="gray" fontSize={30}>Emotional</Text>
-                <FormControl as='fieldset'>
-                    <Center>
-                        <FormLabel as='legend' color="teal" fontSize={15}>Do you feel confident in your ability to manage emotions (i.e. anxiety, joy, anger, frustration)?</FormLabel>
-                    </Center>
-                    <RadioGroup onChange={setQstEmotion1} value={qstEmotion1}>
+            <Box width={'60vw'}>
+                <VStack spacing='40px' pb={4}>
+                    <Heading>Form</Heading>
+
+                    <FormControl isRequired>
+                        <FormLabel textAlign='center'>What is your university ?</FormLabel>
+                        <Input placeholder='University name' value={qstUniversity} onChange={handleChangeUniversity} />
+                    </FormControl>
+
+
+                    <FormControl isRequired>
+                        <FormLabel textAlign='center'>What is your year ?</FormLabel>
+                        <Input placeholder='What is your year?' value={qstYear} onChange={handleChangeYear} />
+                    </FormControl>
+
+                    <FormControl isRequired>
+                        <FormLabel textAlign='center'>What sport do you play ?</FormLabel>
+                        <Input placeholder='Sport' value={qstSport} onChange={handleChangeSport} />
+                    </FormControl>
+
+                    <FormControl isRequired>
+                        <FormLabel textAlign='center'>What is your sex ?</FormLabel>
+                        <Input placeholder='Sex' value={qstSex} onChange={handleChangeSex} />
+                    </FormControl>
+
+                    <FormControl isRequired>
+                        <FormLabel textAlign='center'>What is your idol ?</FormLabel>
+                        <Input placeholder='idol name' value={qstIdol} onChange={handleChangeIdol} />
+                    </FormControl>
+
+                    <Text color="gray" fontSize={30}>Emotional</Text>
+                    <FormControl as='fieldset' isRequired>
                         <Center>
-                            <HStack spacing='24px'>
-                                <Radio value='Not at all'>Not at all</Radio>
-                                <Radio value='A little'>A little</Radio>
-                                <Radio value='Moderately'>Moderately</Radio>
-                                <Radio value='Quite a bit'>Quite a bit</Radio>
-                                <Radio value='A lot'>A lot</Radio>
-                            </HStack>
+                            <FormLabel textAlign='center' as='legend' color="teal" fontSize={15}>Do you feel confident in your ability to manage emotions (i.e. anxiety, joy, anger, frustration)?</FormLabel>
                         </Center>
-                    </RadioGroup>
-                </FormControl>
-                <FormControl as='fieldset'>
-                    <Center>
-                        <FormLabel as='legend' color="teal" fontSize={15}>Do you feel comfortable with all emotions, using them in your best interest?</FormLabel>
-                    </Center>
-                    <RadioGroup onChange={setQstEmotion2} value={qstEmotion2}>
+                        <Select value={qstEmotion1} onChange={handleChangeEmotion1}>
+                            <option>Not at all</option>
+                            <option>A little</option>
+                            <option>Moderately</option>
+                            <option>Quite a bit</option>
+                            <option>A lot</option>
+                        </Select>
+                    </FormControl>
+                    <FormControl as='fieldset' isRequired>
                         <Center>
-                            <HStack spacing='24px'>
-                                <Radio value='Not at all'>Not at all</Radio>
-                                <Radio value='A little'>A little</Radio>
-                                <Radio value='Moderately'>Moderately</Radio>
-                                <Radio value='Quite a bit'>Quite a bit</Radio>
-                                <Radio value='A lot'>A lot</Radio>
-                            </HStack>
+                            <FormLabel textAlign='center' as='legend' color="teal" fontSize={15}>Do you feel comfortable with all emotions, using them in your best interest?</FormLabel>
                         </Center>
-                    </RadioGroup>
-                </FormControl>
-                <FormControl as='fieldset'>
-                    <Center>
-                        <FormLabel as='legend' color="teal" fontSize={15}>On a scale from 1 to 10 (10 being the most), how important is it in your current life to improve your knowledge on emotions and work on it?</FormLabel>
-                    </Center>
-                    <RadioGroup onChange={setQstEmotion3} value={qstEmotion3}>
+                        <Select value={qstEmotion2} onChange={handleChangeEmotion2}>
+                            <option>Not at all</option>
+                            <option>A little</option>
+                            <option>Moderately</option>
+                            <option>Quite a bit</option>
+                            <option>A lot</option>
+                        </Select>
+                    </FormControl>
+                    <FormControl as='fieldset' isRequired>
                         <Center>
-                            <HStack spacing='24px'>
-                                <Radio value='1'>1</Radio>
-                                <Radio value='2'>2</Radio>
-                                <Radio value='3'>3</Radio>
-                                <Radio value='4'>4</Radio>
-                                <Radio value='5'>5</Radio>
-                                <Radio value='6'>6</Radio>
-                                <Radio value='7'>7</Radio>
-                                <Radio value='8'>8</Radio>
-                                <Radio value='9'>9</Radio>
-                                <Radio value='10'>10</Radio>
-                            </HStack>
+                            <FormLabel textAlign='center' as='legend' color="teal" fontSize={15}>On a scale from 1 to 10 (10 being the most), how important is it in your current life to improve your knowledge on emotions and work on it?</FormLabel>
                         </Center>
-                    </RadioGroup>
-                </FormControl>
-                <Text color="gray" fontSize={30}>Physical</Text>
-                <FormControl as='fieldset'>
-                    <Center>
-                        <FormLabel as='legend' color="teal" fontSize={15}>Do you feel confident in your knowledge about nutrition, sleep, possible injuries, and your appearance to feel comfortable and happy?</FormLabel>
-                    </Center>
-                    <RadioGroup onChange={setQstPhysical1} value={qstPhysical1}>
+                        <Slider
+                            aria-label='slider-ex-6'
+                            onChange={setQstEmotion3}
+                            min={1} max={10} step={1}
+                            defaultValue={1}
+                        >
+                            <SliderMark
+                                value={qstEmotion3}
+                                textAlign='center'
+                                bg='black'
+                                color='white'
+                                mt='4'
+                                ml='-6'
+                                w='12'
+                            >
+                                {qstEmotion3}
+                            </SliderMark>
+                            <SliderTrack>
+                                <SliderFilledTrack bg='black' />
+                            </SliderTrack>
+                            <SliderThumb boxSize={6}>
+                                <Box color='black' />
+                            </SliderThumb>
+                        </Slider>
+                    </FormControl>
+                    <Text color="gray" fontSize={30}>Physical</Text>
+                    <FormControl as='fieldset' isRequired>
                         <Center>
-                            <HStack spacing='24px'>
-                                <Radio value='Not at all'>Not at all</Radio>
-                                <Radio value='A little'>A little</Radio>
-                                <Radio value='Moderately'>Moderately</Radio>
-                                <Radio value='Quite a bit'>Quite a bit</Radio>
-                                <Radio value='A lot'>A lot</Radio>
-                            </HStack>
+                            <FormLabel textAlign='center' as='legend' color="teal" fontSize={15}>Do you feel confident in your knowledge about nutrition, sleep, possible injuries, and your appearance to feel comfortable and happy?</FormLabel>
                         </Center>
-                    </RadioGroup>
-                </FormControl>
-                <FormControl as='fieldset'>
-                    <Center>
-                        <FormLabel as='legend' color="teal" fontSize={15}>Is it important for you to improve these topics and your ability to master the Physical pillar?</FormLabel>
-                    </Center>
-                    <RadioGroup onChange={setQstPhysical2} value={qstPhysical2}>
+                        <Select value={qstPhysical1} onChange={handleChangePhysical1}>
+                            <option>Not at all</option>
+                            <option>A little</option>
+                            <option>Moderately</option>
+                            <option>Quite a bit</option>
+                            <option>A lot</option>
+                        </Select>
+                    </FormControl>
+                    <FormControl as='fieldset' isRequired>
                         <Center>
-                            <HStack spacing='24px'>
-                                <Radio value='Yes'>Yes</Radio>
-                                <Radio value='No'>No</Radio>
-                            </HStack>
+                            <FormLabel textAlign='center' as='legend' color="teal" fontSize={15}>Is it important for you to improve these topics and your ability to master the Physical pillar?</FormLabel>
                         </Center>
-                    </RadioGroup>
-                </FormControl>
-                <FormControl as='fieldset'>
-                    <Center>
-                        <FormLabel as='legend' color="teal" fontSize={15}>Which one would you like to improve the most?</FormLabel>
-                    </Center>
-                    <RadioGroup onChange={setQstPhysical3} value={qstPhysical3}>
+                        <RadioGroup onChange={setQstPhysical2} value={qstPhysical2}>
+                            <Center>
+                                <HStack spacing='24px'>
+                                    <Radio colorScheme='blackAlpha' value='Yes'>Yes</Radio>
+                                    <Radio colorScheme='blackAlpha' value='No'>No</Radio>
+                                </HStack>
+                            </Center>
+                        </RadioGroup>
+                    </FormControl>
+                    <FormControl as='fieldset' isRequired>
                         <Center>
-                            <HStack spacing='24px'>
-                                <Radio value='Nutrition'>Nutrition</Radio>
-                                <Radio value='Sleep'>Sleep</Radio>
-                                <Radio value='Potential Injury'>Potential Injury</Radio>
-                                <Radio value='Your Look'>Your Look</Radio>
-                            </HStack>
+                            <FormLabel textAlign='center' as='legend' color="teal" fontSize={15}>Which one would you like to improve the most?</FormLabel>
                         </Center>
-                    </RadioGroup>
-                </FormControl>
-                <Text color="gray" fontSize={30}>Mental</Text>
-                <FormControl as='fieldset'>
-                    <Center>
-                        <FormLabel as='legend' color="teal" fontSize={15}>I have a healthy and positive mindset and I always tend to prioritize my mental health</FormLabel>
-                    </Center>
-                    <RadioGroup onChange={setQstMental1} value={qstMental1}>
+                        <Select value={qstPhysical3} onChange={handleChangePhysical3}>
+                            <option>Nutrition</option>
+                            <option>Sleep</option>
+                            <option>Potential Injury</option>
+                            <option>Your Look</option>
+                        </Select>
+                    </FormControl>
+                    <Text color="gray" fontSize={30}>Mental</Text>
+                    <FormControl as='fieldset' isRequired>
                         <Center>
-                            <HStack spacing='24px'>
-                                <Radio value='Not at all'>Not at all</Radio>
-                                <Radio value='A little'>A little</Radio>
-                                <Radio value='Moderately'>Moderately</Radio>
-                                <Radio value='Quite a bit'>Quite a bit</Radio>
-                                <Radio value='A lot'>A lot</Radio>
-                            </HStack>
+                            <FormLabel textAlign='center' as='legend' color="teal" fontSize={15}>I have a healthy and positive mindset and I always tend to prioritize my mental health</FormLabel>
                         </Center>
-                    </RadioGroup>
-                </FormControl>
-                <FormControl as='fieldset'>
-                    <Center>
-                        <FormLabel as='legend' color="teal" fontSize={15}>I would like to work more on these areas to develop a mindset that helps with clarity, confidence, the ability to learn new skills, be creative, and think independently</FormLabel>
-                    </Center>
-                    <RadioGroup onChange={setQstMental2} value={qstMental2}>
+                        <Select value={qstMental1} onChange={handleChangeMental1}>
+                            <option>Not at all</option>
+                            <option>A little</option>
+                            <option>Moderately</option>
+                            <option>Quite a bit</option>
+                            <option>A lot</option>
+                        </Select>
+                    </FormControl>
+                    <FormControl as='fieldset' isRequired>
                         <Center>
-                            <HStack spacing='24px'>
-                                <Radio value='Yes'>Yes</Radio>
-                                <Radio value='No'>No</Radio>
-                            </HStack>
+                            <FormLabel textAlign='center' as='legend' color="teal" fontSize={15}>I would like to work more on these areas to develop a mindset that helps with clarity, confidence, the ability to learn new skills, be creative, and think independently</FormLabel>
                         </Center>
-                    </RadioGroup>
-                </FormControl>
-                <Text color="gray" fontSize={30}>Spiritual</Text>
-                <FormControl as='fieldset'>
-                    <Center>
-                        <FormLabel as='legend' color="teal" fontSize={15}>I feel that I have a great purpose in life</FormLabel>
-                    </Center>
-                    <RadioGroup onChange={setQstSpiritual1} value={qstSpiritual1}>
+                        <RadioGroup onChange={setQstMental2} value={qstMental2}>
+                            <Center>
+                                <HStack spacing='24px'>
+                                    <Radio colorScheme='blackAlpha' value='Yes'>Yes</Radio>
+                                    <Radio colorScheme='blackAlpha' value='No'>No</Radio>
+                                </HStack>
+                            </Center>
+                        </RadioGroup>
+                    </FormControl>
+                    <Text color="gray" fontSize={30}>Spiritual</Text>
+                    <FormControl as='fieldset' isRequired>
                         <Center>
-                            <HStack spacing='24px'>
-                                <Radio value='Not at all'>Not at all</Radio>
-                                <Radio value='A little'>A little</Radio>
-                                <Radio value='Moderately'>Moderately</Radio>
-                                <Radio value='Quite a bit'>Quite a bit</Radio>
-                                <Radio value='A lot'>A lot</Radio>
-                            </HStack>
+                            <FormLabel textAlign='center' as='legend' color="teal" fontSize={15}>I feel that I have a great purpose in life</FormLabel>
                         </Center>
-                    </RadioGroup>
-                </FormControl>
-                <FormControl as='fieldset'>
-                    <Center>
-                        <FormLabel as='legend' color="teal" fontSize={15}>Would you like to work on your personal growth by finding inner peace and living each day to the fullest with mindfulness and happiness?</FormLabel>
-                    </Center>
-                    <RadioGroup onChange={setQstSpiritual2} value={qstSpiritual2}>
+                        <Select value={qstSpiritual1} onChange={handleChangeSpiritual1}>
+                            <option>Not at all</option>
+                            <option>A little</option>
+                            <option>Moderately</option>
+                            <option>Quite a bit</option>
+                            <option>A lot</option>
+                        </Select>
+                    </FormControl>
+                    <FormControl as='fieldset' isRequired>
                         <Center>
-                            <HStack spacing='24px'>
-                                <Radio value='Yes'>Yes</Radio>
-                                <Radio value='No'>No</Radio>
-                            </HStack>
+                            <FormLabel textAlign='center' as='legend' color="teal" fontSize={15}>Would you like to work on your personal growth by finding inner peace and living each day to the fullest with mindfulness and happiness?</FormLabel>
                         </Center>
-                    </RadioGroup>
-                </FormControl>
-                <Text color="gray" fontSize={30}>Social</Text>
-                <FormControl as='fieldset'>
-                    <Center>
-                        <FormLabel as='legend' color="teal" fontSize={15}>Do you feel a sense of connection and belonging in your social life?</FormLabel>
-                    </Center>
-                    <RadioGroup onChange={setQstSocial1} value={qstSocial1}>
+                        <RadioGroup onChange={setQstSpiritual2} value={qstSpiritual2}>
+                            <Center>
+                                <HStack spacing='24px'>
+                                    <Radio colorScheme='blackAlpha' value='Yes'>Yes</Radio>
+                                    <Radio colorScheme='blackAlpha' value='No'>No</Radio>
+                                </HStack>
+                            </Center>
+                        </RadioGroup>
+                    </FormControl>
+                    <Text color="gray" fontSize={30}>Social</Text>
+                    <FormControl as='fieldset' isRequired>
                         <Center>
-                            <HStack spacing='24px'>
-                                <Radio value='Not at all'>Not at all</Radio>
-                                <Radio value='A little'>A little</Radio>
-                                <Radio value='Moderately'>Moderately</Radio>
-                                <Radio value='Quite a bit'>Quite a bit</Radio>
-                                <Radio value='A lot'>A lot</Radio>
-                            </HStack>
+                            <FormLabel textAlign='center' as='legend' color="teal" fontSize={15}>Do you feel a sense of connection and belonging in your social life?</FormLabel>
                         </Center>
-                    </RadioGroup>
-                </FormControl>
-                <FormControl as='fieldset'>
-                    <Center>
-                        <FormLabel as='legend' color="teal" fontSize={15}>Are you surrounded by meaningful, supportive, and positive people that make you feel safe, respected, and accepted?</FormLabel>
-                    </Center>
-                    <RadioGroup onChange={setQstSocial2} value={qstSocial2}>
+                        <Select value={qstSocial1} onChange={handleChangeSocial1}>
+                            <option>Not at all</option>
+                            <option>A little</option>
+                            <option>Moderately</option>
+                            <option>Quite a bit</option>
+                            <option>A lot</option>
+                        </Select>
+                    </FormControl>
+                    <FormControl as='fieldset' isRequired>
                         <Center>
-                            <HStack spacing='24px'>
-                                <Radio value='Not at all'>Not at all</Radio>
-                                <Radio value='A little'>A little</Radio>
-                                <Radio value='Moderately'>Moderately</Radio>
-                                <Radio value='Quite a bit'>Quite a bit</Radio>
-                                <Radio value='A lot'>A lot</Radio>
-                            </HStack>
+                            <FormLabel textAlign='center' as='legend' color="teal" fontSize={15}>Are you surrounded by meaningful, supportive, and positive people that make you feel safe, respected, and accepted?</FormLabel>
                         </Center>
-                    </RadioGroup>
-                </FormControl>
-                <FormControl as='fieldset'>
-                    <Center>
-                        <FormLabel as='legend' color="teal" fontSize={15}>Do you desire to learn additional skills to connect with people and develop more healthy relationships?</FormLabel>
-                    </Center>
-                    <RadioGroup onChange={setQstSocial3} value={qstSocial3}>
+                        <Select value={qstSocial2} onChange={handleChangeSocial2}>
+                            <option>Not at all</option>
+                            <option>A little</option>
+                            <option>Moderately</option>
+                            <option>Quite a bit</option>
+                            <option>A lot</option>
+                        </Select>
+                    </FormControl>
+                    <FormControl as='fieldset' isRequired>
                         <Center>
-                            <HStack spacing='24px'>
-                                <Radio value='Yes'>Yes</Radio>
-                                <Radio value='No'>No</Radio>
-                            </HStack>
+                            <FormLabel textAlign='center' as='legend' color="teal" fontSize={15}>Do you desire to learn additional skills to connect with people and develop more healthy relationships?</FormLabel>
                         </Center>
-                    </RadioGroup>
-                </FormControl>
-                <Text color="gray" fontSize={30}>Environmental</Text>
-                <FormControl as='fieldset'>
-                    <Center>
-                        <FormLabel as='legend' color="teal" fontSize={15}>From a scale to 1 to 10, I respect my own personal environment and the environment around me, e.g. The air, water, earth.</FormLabel>
-                    </Center>
-                    <RadioGroup onChange={setQstEnvironmental1} value={qstEnvironmental1}>
+                        <RadioGroup onChange={setQstSocial3} value={qstSocial3}>
+                            <Center>
+                                <HStack spacing='24px'>
+                                    <Radio colorScheme='blackAlpha' value='Yes'>Yes</Radio>
+                                    <Radio colorScheme='blackAlpha' value='No'>No</Radio>
+                                </HStack>
+                            </Center>
+                        </RadioGroup>
+                    </FormControl>
+                    <Text color="gray" fontSize={30}>Environmental</Text>
+                    <FormControl as='fieldset' isRequired>
                         <Center>
-                            <HStack spacing='24px'>
-                                <Radio value='1'>1</Radio>
-                                <Radio value='2'>2</Radio>
-                                <Radio value='3'>3</Radio>
-                                <Radio value='4'>4</Radio>
-                                <Radio value='5'>5</Radio>
-                                <Radio value='6'>6</Radio>
-                                <Radio value='7'>7</Radio>
-                                <Radio value='8'>8</Radio>
-                                <Radio value='9'>9</Radio>
-                                <Radio value='10'>10</Radio>
-                            </HStack>
+                            <FormLabel textAlign='center' as='legend' color="teal" fontSize={15}>From a scale to 1 to 10, I respect my own personal environment and the environment around me, e.g. The air, water, earth.</FormLabel>
                         </Center>
-                    </RadioGroup>
-                </FormControl>
-                <FormControl as='fieldset'>
-                    <Center>
-                        <FormLabel as='legend' color="teal" fontSize={15}>Did you know that your environment has a direct impact on your mindset, creativity, and productivity?</FormLabel>
-                    </Center>
-                    <RadioGroup onChange={setQstEnvironmental2} value={qstEnvironmental2}>
+                        <Slider
+                            aria-label='slider-ex-6'
+                            onChange={setQstEnvironmental1}
+                            min={1} max={10} step={1}
+                            defaultValue={1}
+                        >
+                            <SliderMark
+                                value={qstEnvironmental1}
+                                textAlign='center'
+                                bg='black'
+                                color='white'
+                                mt='4'
+                                ml='-6'
+                                w='12'
+                            >
+                                {qstEnvironmental1}
+                            </SliderMark>
+                            <SliderTrack>
+                                <SliderFilledTrack bg='black' />
+                            </SliderTrack>
+                            <SliderThumb boxSize={6}>
+                                <Box color='black' />
+                            </SliderThumb>
+                        </Slider>
+                    </FormControl>
+                    <FormControl as='fieldset' isRequired>
                         <Center>
-                            <HStack spacing='24px'>
-                                <Radio value='Yes'>Yes</Radio>
-                                <Radio value='No'>No</Radio>
-                            </HStack>
+                            <FormLabel textAlign='center' as='legend' color="teal" fontSize={15}>Did you know that your environment has a direct impact on your mindset, creativity, and productivity?</FormLabel>
                         </Center>
-                    </RadioGroup>
-                </FormControl>
-                <FormControl as='fieldset'>
-                    <Center>
-                        <FormLabel as='legend' color="teal" fontSize={15}>Would you like to learn more about how you can support your surroundings?</FormLabel>
-                    </Center>
-                    <RadioGroup onChange={setQstEnvironmental3} value={qstEnvironmental3}>
+                        <RadioGroup onChange={setQstEnvironmental2} value={qstEnvironmental2}>
+                            <Center>
+                                <HStack spacing='24px'>
+                                    <Radio colorScheme='blackAlpha' value='Yes'>Yes</Radio>
+                                    <Radio colorScheme='blackAlpha' value='No'>No</Radio>
+                                </HStack>
+                            </Center>
+                        </RadioGroup>
+                    </FormControl>
+                    <FormControl as='fieldset' isRequired>
                         <Center>
-                            <HStack spacing='24px'>
-                                <Radio value='Yes'>Yes</Radio>
-                                <Radio value='No'>No</Radio>
-                            </HStack>
+                            <FormLabel textAlign='center' as='legend' color="teal" fontSize={15}>Would you like to learn more about how you can support your surroundings?</FormLabel>
                         </Center>
-                    </RadioGroup>
-                </FormControl>
-                <Text color="gray" fontSize={30}>Financial</Text>
-                <FormControl as='fieldset'>
-                    <Center>
-                        <FormLabel as='legend' color="teal" fontSize={15}>On a scale from 1 to 10, I know how to manage my financial expenses and avoid financial stress</FormLabel>
-                    </Center>
-                    <RadioGroup onChange={setQstFinancial1} value={qstFinancial1}>
+                        <RadioGroup onChange={setQstEnvironmental3} value={qstEnvironmental3}>
+                            <Center>
+                                <HStack spacing='24px'>
+                                    <Radio colorScheme='blackAlpha' value='Yes'>Yes</Radio>
+                                    <Radio colorScheme='blackAlpha' value='No'>No</Radio>
+                                </HStack>
+                            </Center>
+                        </RadioGroup>
+                    </FormControl>
+                    <Text color="gray" fontSize={30}>Financial</Text>
+                    <FormControl as='fieldset' isRequired>
                         <Center>
-                            <HStack spacing='24px'>
-                                <Radio value='1'>1</Radio>
-                                <Radio value='2'>2</Radio>
-                                <Radio value='3'>3</Radio>
-                                <Radio value='4'>4</Radio>
-                                <Radio value='5'>5</Radio>
-                                <Radio value='6'>6</Radio>
-                                <Radio value='7'>7</Radio>
-                                <Radio value='8'>8</Radio>
-                                <Radio value='9'>9</Radio>
-                                <Radio value='10'>10</Radio>
-                            </HStack>
+                            <FormLabel textAlign='center' as='legend' color="teal" fontSize={15}>On a scale from 1 to 10, I know how to manage my financial expenses and avoid financial stress</FormLabel>
                         </Center>
-                    </RadioGroup>
-                </FormControl>
-                <FormControl as='fieldset'>
-                    <Center>
-                        <FormLabel as='legend' color="teal" fontSize={15}>I want to learn to manage my financials more consistently and thoughtfully</FormLabel>
-                    </Center>
-                    <RadioGroup onChange={setQstFinancial2} value={qstFinancial2}>
+                        <Slider
+                            aria-label='slider-ex-6'
+                            onChange={setQstFinancial1}
+                            min={1} max={10} step={1}
+                            defaultValue={1}
+                        >
+                            <SliderMark
+                                value={qstFinancial1}
+                                textAlign='center'
+                                bg='black'
+                                color='white'
+                                mt='4'
+                                ml='-6'
+                                w='12'
+                            >
+                                {qstFinancial1}
+                            </SliderMark>
+                            <SliderTrack>
+                                <SliderFilledTrack bg='black' />
+                            </SliderTrack>
+                            <SliderThumb boxSize={6}>
+                                <Box color='black' />
+                            </SliderThumb>
+                        </Slider>
+                    </FormControl>
+                    <FormControl as='fieldset' isRequired>
                         <Center>
-                            <HStack spacing='24px'>
-                                <Radio value='Completely disagree'>Completely disagree</Radio>
-                                <Radio value='Disagree'>Disagree</Radio>
-                                <Radio value='Somewhat agree'>Somewhat agree</Radio>
-                                <Radio value='Agree'>Agree</Radio>
-                                <Radio value='Completely agree'>Completely agree</Radio>
-                            </HStack>
+                            <FormLabel textAlign='center' as='legend' color="teal" fontSize={15}>I want to learn to manage my financials more consistently and thoughtfully</FormLabel>
                         </Center>
-                    </RadioGroup>
-                </FormControl>
-                <FormControl as='fieldset'>
-                    <Center>
-                        <FormLabel as='legend' color="teal" fontSize={15}>Would you like to learn more about your relationship with money and how to take care of this area to help your mind and quality of life?</FormLabel>
-                    </Center>
-                    <RadioGroup onChange={setQstFinancial3} value={qstFinancial3}>
+                        <Select value={qstFinancial2} onChange={handleChangeFinancial2}>
+                            <option>Completely disagree</option>
+                            <option>Disagree</option>
+                            <option>Somewhat agree</option>
+                            <option>Agree</option>
+                            <option>Completely agree</option>
+                        </Select>
+                    </FormControl>
+                    <FormControl as='fieldset' isRequired>
                         <Center>
-                            <HStack spacing='24px'>
-                                <Radio value='Yes'>Yes</Radio>
-                                <Radio value='No'>No</Radio>
-                            </HStack>
+                            <FormLabel textAlign='center' as='legend' color="teal" fontSize={15}>Would you like to learn more about your relationship with money and how to take care of this area to help your mind and quality of life?</FormLabel>
                         </Center>
-                    </RadioGroup>
-                </FormControl>
-                <Text color="gray" fontSize={30}>Occupational</Text>
-                <FormControl as='fieldset'>
-                    <Center>
-                        <FormLabel as='legend' color="teal" fontSize={15}>Do you feel that you have created a healthy work-life balance</FormLabel>
-                    </Center>
-                    <RadioGroup onChange={setQstOccupational1} value={qstOccupational1}>
+                        <RadioGroup onChange={setQstFinancial3} value={qstFinancial3}>
+                            <Center>
+                                <HStack spacing='24px'>
+                                    <Radio colorScheme='blackAlpha' value='Yes'>Yes</Radio>
+                                    <Radio colorScheme='blackAlpha' value='No'>No</Radio>
+                                </HStack>
+                            </Center>
+                        </RadioGroup>
+                    </FormControl>
+                    <Text color="gray" fontSize={30}>Occupational</Text>
+                    <FormControl as='fieldset' isRequired>
                         <Center>
-                            <HStack spacing='24px'>
-                                <Radio value='Not at all'>Not at all</Radio>
-                                <Radio value='A little'>A little</Radio>
-                                <Radio value='Moderately'>Moderately</Radio>
-                                <Radio value='Quite a bit'>Quite a bit</Radio>
-                                <Radio value='A lot'>A lot</Radio>
-                            </HStack>
+                            <FormLabel textAlign='center' as='legend' color="teal" fontSize={15}>Do you feel that you have created a healthy work-life balance</FormLabel>
                         </Center>
-                    </RadioGroup>
-                </FormControl>
-                <FormControl as='fieldset'>
-                    <Center>
-                        <FormLabel as='legend' color="teal" fontSize={15}>Would you like to learn more about how not to feel overwhelmed at work, avoid burnout, feel challenged, and continuously develop new skills?</FormLabel>
-                    </Center>
-                    <RadioGroup onChange={setQstOccupational2} value={qstOccupational2}>
+                        <Select value={qstOccupational1} onChange={handleChangeOccupational1}>
+                            <option>Not at all</option>
+                            <option>A little</option>
+                            <option>Moderately</option>
+                            <option>Quite a bit</option>
+                            <option>A lot</option>
+                        </Select>
+                    </FormControl>
+                    <FormControl as='fieldset' isRequired>
                         <Center>
-                            <HStack spacing='24px'>
-                                <Radio value='Yes'>Yes</Radio>
-                                <Radio value='No'>No</Radio>
-                            </HStack>
+                            <FormLabel textAlign='center' as='legend' color="teal" fontSize={15}>Would you like to learn more about how not to feel overwhelmed at work, avoid burnout, feel challenged, and continuously develop new skills?</FormLabel>
                         </Center>
-                    </RadioGroup>
-                </FormControl>
-                <Button mt={4} mb={4} colorScheme='teal' onClick={() => sendForm()}>Valider</Button>
-            </VStack>
+                        <RadioGroup onChange={setQstOccupational2} value={qstOccupational2}>
+                            <Center>
+                                <HStack spacing='24px'>
+                                    <Radio colorScheme='blackAlpha' value='Yes'>Yes</Radio>
+                                    <Radio colorScheme='blackAlpha' value='No'>No</Radio>
+                                </HStack>
+                            </Center>
+                        </RadioGroup>
+                    </FormControl>
+                    <Button mt={4} mb={4} colorScheme='teal' onClick={() => sendForm()}>Valider</Button>
+                </VStack>
+            </Box>
         </Center>
 
 
