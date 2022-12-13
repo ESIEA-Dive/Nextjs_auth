@@ -14,11 +14,11 @@ function form(props: ShowProps) {
 
     const [qstUniversity, setQstUniversity] = useState('');
     const handleChangeUniversity = (event: any) => setQstUniversity(event.target.value);
-    const [qstYear, setQstYear] = useState('');
+    const [qstYear, setQstYear] = useState('1');
     const handleChangeYear = (event: any) => setQstYear(event.target.value);
     const [qstSport, setQstSport] = useState('');
     const handleChangeSport = (event: any) => setQstSport(event.target.value);
-    const [qstSex, setQstSex] = useState('');
+    const [qstSex, setQstSex] = useState('Female');
     const handleChangeSex = (event: any) => setQstSex(event.target.value);
     const [qstIdol, setQstIdol] = useState('');
     const handleChangeIdol = (event: any) => setQstIdol(event.target.value);
@@ -28,29 +28,36 @@ function form(props: ShowProps) {
     const [qstEmotion2, setQstEmotion2] = useState('Not at all');
     const handleChangeEmotion2 = (event: any) => setQstEmotion2(event.target.value);
     const [qstEmotion3, setQstEmotion3] = useState(1);
+
     const [qstPhysical1, setQstPhysical1] = useState('Not at all');
     const handleChangePhysical1 = (event: any) => setQstPhysical1(event.target.value);
     const [qstPhysical2, setQstPhysical2] = useState('Yes');
     const [qstPhysical3, setQstPhysical3] = useState('Nutrition');
     const handleChangePhysical3 = (event: any) => setQstPhysical3(event.target.value);
+
     const [qstMental1, setQstMental1] = useState('Not at all');
     const handleChangeMental1 = (event: any) => setQstMental1(event.target.value);
     const [qstMental2, setQstMental2] = useState('Yes');
+
     const [qstSpiritual1, setQstSpiritual1] = useState('Not at all');
     const handleChangeSpiritual1 = (event: any) => setQstSpiritual1(event.target.value);
     const [qstSpiritual2, setQstSpiritual2] = useState('Yes');
+
     const [qstSocial1, setQstSocial1] = useState('Not at all');
     const handleChangeSocial1 = (event: any) => setQstSocial1(event.target.value);
     const [qstSocial2, setQstSocial2] = useState('Not at all');
     const handleChangeSocial2 = (event: any) => setQstSocial2(event.target.value);
     const [qstSocial3, setQstSocial3] = useState('Yes');
+
     const [qstEnvironmental1, setQstEnvironmental1] = useState(1);
     const [qstEnvironmental2, setQstEnvironmental2] = useState('Yes');
     const [qstEnvironmental3, setQstEnvironmental3] = useState('Yes');
+
     const [qstFinancial1, setQstFinancial1] = useState(1);
     const [qstFinancial2, setQstFinancial2] = useState('Completely disagree');
     const handleChangeFinancial2 = (event: any) => setQstFinancial2(event.target.value);
     const [qstFinancial3, setQstFinancial3] = useState('Yes');
+
     const [qstOccupational1, setQstOccupational1] = useState('Not at all');
     const handleChangeOccupational1 = (event: any) => setQstOccupational1(event.target.value);
     const [qstOccupational2, setQstOccupational2] = useState('Yes');
@@ -120,29 +127,53 @@ function form(props: ShowProps) {
                     <Heading>Form</Heading>
 
                     <FormControl isRequired>
-                        <FormLabel textAlign='center'>What is your university ?</FormLabel>
+                        <Center>
+                            <FormLabel textAlign='center' as='legend' color="teal" fontSize={15}>What is your university ?</FormLabel>
+                        </Center>
                         <Input placeholder='University name' value={qstUniversity} onChange={handleChangeUniversity} />
                     </FormControl>
 
 
                     <FormControl isRequired>
-                        <FormLabel textAlign='center'>What is your year ?</FormLabel>
-                        <Input placeholder='What is your year?' value={qstYear} onChange={handleChangeYear} />
+                        <Center>
+                            <FormLabel textAlign='center' as='legend' color="teal" fontSize={15}>What is your year ?</FormLabel>
+                        </Center>
+                        <Select value={qstYear} onChange={handleChangeYear}>
+                            <option>1</option>
+                            <option>2</option>
+                            <option>3</option>
+                            <option>4</option>
+                            <option>5</option>
+                            <option>6</option>
+                            <option>7</option>
+                            <option>8</option>
+                            <option>9</option>
+                        </Select>
                     </FormControl>
 
                     <FormControl isRequired>
-                        <FormLabel textAlign='center'>What sport do you play ?</FormLabel>
+                        <Center>
+                            <FormLabel textAlign='center' as='legend' color="teal" fontSize={15}>What sport do you play ?</FormLabel>
+                        </Center>
                         <Input placeholder='Sport' value={qstSport} onChange={handleChangeSport} />
                     </FormControl>
 
                     <FormControl isRequired>
-                        <FormLabel textAlign='center'>What is your sex ?</FormLabel>
-                        <Input placeholder='Sex' value={qstSex} onChange={handleChangeSex} />
+                        <Center>
+                            <FormLabel textAlign='center' as='legend' color="teal" fontSize={15}>What is your sex ?</FormLabel>
+                        </Center>
+                        <Select value={qstSex} onChange={handleChangeSex}>
+                            <option>Female</option>
+                            <option>Male</option>
+                            <option>Other</option>
+                        </Select>
                     </FormControl>
 
                     <FormControl isRequired>
-                        <FormLabel textAlign='center'>What is your idol ?</FormLabel>
-                        <Input placeholder='idol name' value={qstIdol} onChange={handleChangeIdol} />
+                        <Center>
+                            <FormLabel textAlign='center' as='legend' color="teal" fontSize={15}>What is your idol ?</FormLabel>
+                        </Center>
+                        <Input placeholder='Idol name' value={qstIdol} onChange={handleChangeIdol} />
                     </FormControl>
 
                     <Text color="gray" fontSize={30}>Emotional</Text>
