@@ -5,10 +5,10 @@ import { EditIcon, CheckIcon } from "@chakra-ui/icons";
 
 const pictos = [
     {
-        url: 'https://cdn-icons-png.flaticon.com/512/2202/2202112.png',
+        url: 'https://cdn-icons-png.flaticon.com/512/4139/4139993.png',
     },
     {
-        url: 'https://cdn-icons-png.flaticon.com/512/4333/4333609.png',
+        url: 'https://cdn-icons-png.flaticon.com/128/4139/4139951.png',
     },
     {
         url: 'https://cdn-icons-png.flaticon.com/512/4140/4140047.png',
@@ -17,7 +17,7 @@ const pictos = [
         url: 'https://cdn-icons-png.flaticon.com/512/4140/4140048.png',
     },
     {
-        url: 'https://cdn-icons-png.flaticon.com/512/4140/4140037.png',
+        url: 'https://cdn-icons-png.flaticon.com/128/4140/4140040.png',
     },
     {
         url: 'https://cdn-icons-png.flaticon.com/512/4140/4140051.png',
@@ -36,7 +36,7 @@ interface ShowProps {
     url: string
 }
 
-function Show(props: ShowProps) {
+function Profile(props: ShowProps) {
 
     const { data: session } = useSession();
     const [user, setUser] = useState(props.user);
@@ -50,44 +50,50 @@ function Show(props: ShowProps) {
     const [editEmail, setEditEmail] = useState(false);
     const [valueName, setValueName] = useState(user.name || session?.user?.name || "name");
     const [valueEmail, setValueEmail] = useState(user.email || session?.user?.email || "email");
-    const handleChangeName = (event: any) => setValueName(event.target.value);
-    const handleChangeEmail = (event: any) => setValueEmail(event.target.value);
+
+
 
     const updatePicture = async () => {
-        setUserPicture(pictoSelected)
-        const newUser = { ...user, image: pictoSelected }
-        await fetch(props.url + "users/" + user._id, {
-            method: "put",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify(newUser),
-        })
-        setUser(newUser)
+        if (userPicture !== pictoSelected) {
+            setUserPicture(pictoSelected)
+            const newUser = { ...user, image: pictoSelected };
+            await fetch(props.url + "users/" + user._id, {
+                method: "put",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify(newUser),
+            })
+            setUser(newUser);
+        }
     }
 
     const updateEmail = async () => {
-        const newUser = { ...user, email: valueEmail ? valueEmail : user.email }
-        await fetch(props.url + "users/" + user._id, {
-            method: "put",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify(newUser),
-        })
-        setUser(newUser)
+        if (user.email !== valueEmail) {
+            const newUser = { ...user, email: valueEmail ? valueEmail : user.email };
+            await fetch(props.url + "users/" + user._id, {
+                method: "put",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify(newUser),
+            })
+            setUser(newUser);
+        }
     }
 
     const updateName = async () => {
-        const newUser = { ...user, name: valueName ? valueName : user.name }
-        await fetch(props.url + "users/" + user._id, {
-            method: "put",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify(newUser),
-        })
-        setUser(newUser)
+        if (user.name !== valueName) {
+            const newUser = { ...user, name: valueName ? valueName : user.name };
+            await fetch(props.url + "users/" + user._id, {
+                method: "put",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify(newUser),
+            })
+            setUser(newUser);
+        }
     }
 
     return (
@@ -149,16 +155,16 @@ function Show(props: ShowProps) {
                     <Text color="gray" fontSize={30}>Name</Text>
                     <HStack spacing='24px'>
                         {!editName && (<Text color="teal" fontSize={15}>{valueName}</Text>)}
-                        {editName && (<Input value={valueName} onChange={handleChangeName} variant="flushed" placeholder="New name" size="sm" />)}
+                        {editName && (<Input value={valueName} onChange={(e: any) => setValueName(e.target.value)} variant="flushed" placeholder="New name" size="sm" />)}
                         {!editName && (<Button onClick={() => { setEditName(true) }} leftIcon={<EditIcon />} colorScheme='teal' variant='solid'>Edit</Button>)}
-                        {editName && (<Button onClick={() => { setEditName(false); updateName(); }} leftIcon={<CheckIcon />} colorScheme='teal' variant='solid'>Valider</Button>)}
+                        {editName && (<Button onClick={() => { setEditName(false); updateName(); }} leftIcon={<CheckIcon />} colorScheme='teal' variant='solid' paddingInline={6}>Valider</Button>)}
                     </HStack>
                     <Text color="gray" fontSize={30}>Email</Text>
                     <HStack spacing='24px'>
                         {!editEmail && (<Text color="teal" fontSize={15}>{valueEmail}</Text>)}
-                        {editEmail && (<Input value={valueEmail} onChange={handleChangeEmail} variant="flushed" placeholder="New email" size="sm" />)}
+                        {editEmail && (<Input value={valueEmail} onChange={(e: any) => setValueEmail(e.target.value)} variant="flushed" placeholder="New email" size="sm" />)}
                         {!editEmail && (<Button onClick={() => { setEditEmail(true) }} leftIcon={<EditIcon />} colorScheme='teal' variant='solid'>Edit</Button>)}
-                        {editEmail && (<Button onClick={() => { setEditEmail(false); updateEmail(); }} leftIcon={<CheckIcon />} colorScheme='teal' variant='solid'>Valider</Button>)}
+                        {editEmail && (<Button onClick={() => { setEditEmail(false); updateEmail(); }} leftIcon={<CheckIcon />} colorScheme='teal' variant='solid' paddingInline={6}>Valider</Button>)}
                     </HStack>
                 </VStack>
             </Center>
@@ -166,7 +172,7 @@ function Show(props: ShowProps) {
     )
 }
 
-export default Show
+export default Profile
 
 export async function getServerSideProps(context: any) {
     const session = await getSession(context);
@@ -181,11 +187,20 @@ export async function getServerSideProps(context: any) {
                 },
                 props: {},
             }
+        else {
+            return {
+                props: {
+                    user: user,
+                    url: process.env.API_URL
+                }
+            }
+        }
     }
     return {
-        props: {
-            user: user,
-            url: process.env.API_URL
-        }
+        redirect: {
+            permanent: false,
+            destination: "/auth",
+        },
+        props: {},
     }
 }

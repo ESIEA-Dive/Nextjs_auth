@@ -24,6 +24,10 @@ const userSchema = new Schema({
   filledForm: {
     type: Boolean
   },
+  status: {
+    type: String,
+    required: true,
+  }
 });
 
 const User = mongoose.models.User || mongoose.model("User", userSchema);

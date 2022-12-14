@@ -1,6 +1,6 @@
 import { useState } from "react";
 import type { NextPage } from "next";
-import { signIn, getProviders, useSession } from "next-auth/react";
+import { signIn, getProviders } from "next-auth/react";
 import {
   Button,
   Flex,
@@ -10,6 +10,10 @@ import {
   Box,
   Heading,
   Text,
+  RadioGroup,
+  Center,
+  HStack,
+  Radio,
 } from "@chakra-ui/react";
 import { Field, Form, Formik } from "formik";
 import axios from "axios";
@@ -75,6 +79,7 @@ const Auth: NextPage = ({ providers }: any) => {
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [status, setStatus] = useState("Yes");
 
   const ProvidersButtons = ({ providers }: any) => (
     <Flex direction="column" w="100%">
@@ -113,7 +118,7 @@ const Auth: NextPage = ({ providers }: any) => {
     const res = await axios
       .post(
         "/api/register",
-        { username, email, password },
+        { username, email, password, status },
         {
           headers: {
             Accept: "application/json",
@@ -213,7 +218,7 @@ const Auth: NextPage = ({ providers }: any) => {
                   </Field>
                   <Field name="password">
                     {() => (
-                      <FormControl isRequired mb={3}>
+                      <FormControl isRequired mb={6}>
                         <FormLabel htmlFor="password">Password</FormLabel>
                         <Input
                           value={password}
@@ -225,6 +230,22 @@ const Auth: NextPage = ({ providers }: any) => {
                       </FormControl>
                     )}
                   </Field>
+                  {authType === "Register" && (
+                    <Field name="status">
+                      {() => (
+                        <FormControl isRequired mb={3}>
+                          <FormLabel htmlFor="text">Statut</FormLabel>
+                          <RadioGroup onChange={setStatus} value={status}>
+                            <Center>
+                              <HStack spacing='24px'>
+                                <Radio colorScheme='blackAlpha' value='Student'>Student</Radio>
+                                <Radio colorScheme='blackAlpha' value='Teacher'>Teacher</Radio>
+                              </HStack>
+                            </Center>
+                          </RadioGroup>
+                        </FormControl>
+                      )}
+                    </Field>)}
                   <Button
                     mt={6}
                     bg="blue.400"

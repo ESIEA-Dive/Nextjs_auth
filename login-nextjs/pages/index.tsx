@@ -1,8 +1,10 @@
 import type { NextPage } from "next";
 import { useSession, signIn, signOut, getSession } from "next-auth/react";
 import { Input, Flex, Button, Text, Heading, Modal, ModalOverlay, ModalContent, ModalHeader, ModalCloseButton, ModalFooter, useDisclosure, VStack, Center, HStack, Select, Textarea } from "@chakra-ui/react";
+import { Flex, Button, Text, Heading, InputGroup, Input, InputRightElement } from "@chakra-ui/react";
 import Router from "next/router";
 import { useState } from "react";
+import { SearchIcon } from '@chakra-ui/icons'
 
 // Define Prop Interface
 interface ShowProps {
@@ -119,6 +121,17 @@ function Home(props: ShowProps) {
           </ModalFooter>
         </ModalContent>
       </Modal>
+      <Heading mt={10}>Classes</Heading>
+      <InputGroup size='md' width={500} mt={10}>
+        <Input
+          pr='4.5rem'
+          type='text'
+          placeholder='Search for a class'
+        />
+        <InputRightElement>
+        <Button onClick={() => { null }} rightIcon={<SearchIcon />} color='teal' pl={2} variant='solid'></Button>
+        </InputRightElement>
+      </InputGroup>
     </Flex>
   );
 };

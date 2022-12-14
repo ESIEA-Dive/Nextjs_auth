@@ -14,10 +14,26 @@ export interface User {
   hashedPassword: string,
   image: string,
   filledForm: boolean,
+  status: string,
+}
+
+// Interface to define our Class model on the frontend
+export interface Class {
+  id: number,
+  userId: string,
+  title: string,
+  date: Date,
+  duration: Date,
+  price: number,
+  description: string,
+  pillar: string,
+  teacher: string,
+  places: number,
 }
 
 // Interface to define our Form model on the frontend
 export interface Form {
+  id: number,
   userId: string,
   qstUniversity: string,
   qstYear: string,

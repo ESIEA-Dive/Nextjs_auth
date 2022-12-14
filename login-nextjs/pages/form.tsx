@@ -13,40 +13,27 @@ function form(props: ShowProps) {
     const { data: session } = useSession();
 
     const [qstUniversity, setQstUniversity] = useState('');
-    const handleChangeUniversity = (event: any) => setQstUniversity(event.target.value);
     const [qstYear, setQstYear] = useState('1');
-    const handleChangeYear = (event: any) => setQstYear(event.target.value);
     const [qstSport, setQstSport] = useState('');
-    const handleChangeSport = (event: any) => setQstSport(event.target.value);
     const [qstSex, setQstSex] = useState('Female');
-    const handleChangeSex = (event: any) => setQstSex(event.target.value);
     const [qstIdol, setQstIdol] = useState('');
-    const handleChangeIdol = (event: any) => setQstIdol(event.target.value);
 
     const [qstEmotion1, setQstEmotion1] = useState('Not at all');
-    const handleChangeEmotion1 = (event: any) => setQstEmotion1(event.target.value);
     const [qstEmotion2, setQstEmotion2] = useState('Not at all');
-    const handleChangeEmotion2 = (event: any) => setQstEmotion2(event.target.value);
     const [qstEmotion3, setQstEmotion3] = useState(1);
 
     const [qstPhysical1, setQstPhysical1] = useState('Not at all');
-    const handleChangePhysical1 = (event: any) => setQstPhysical1(event.target.value);
     const [qstPhysical2, setQstPhysical2] = useState('Yes');
     const [qstPhysical3, setQstPhysical3] = useState('Nutrition');
-    const handleChangePhysical3 = (event: any) => setQstPhysical3(event.target.value);
 
     const [qstMental1, setQstMental1] = useState('Not at all');
-    const handleChangeMental1 = (event: any) => setQstMental1(event.target.value);
     const [qstMental2, setQstMental2] = useState('Yes');
 
     const [qstSpiritual1, setQstSpiritual1] = useState('Not at all');
-    const handleChangeSpiritual1 = (event: any) => setQstSpiritual1(event.target.value);
     const [qstSpiritual2, setQstSpiritual2] = useState('Yes');
 
     const [qstSocial1, setQstSocial1] = useState('Not at all');
-    const handleChangeSocial1 = (event: any) => setQstSocial1(event.target.value);
     const [qstSocial2, setQstSocial2] = useState('Not at all');
-    const handleChangeSocial2 = (event: any) => setQstSocial2(event.target.value);
     const [qstSocial3, setQstSocial3] = useState('Yes');
 
     const [qstEnvironmental1, setQstEnvironmental1] = useState(1);
@@ -55,15 +42,13 @@ function form(props: ShowProps) {
 
     const [qstFinancial1, setQstFinancial1] = useState(1);
     const [qstFinancial2, setQstFinancial2] = useState('Completely disagree');
-    const handleChangeFinancial2 = (event: any) => setQstFinancial2(event.target.value);
     const [qstFinancial3, setQstFinancial3] = useState('Yes');
 
     const [qstOccupational1, setQstOccupational1] = useState('Not at all');
-    const handleChangeOccupational1 = (event: any) => setQstOccupational1(event.target.value);
     const [qstOccupational2, setQstOccupational2] = useState('Yes');
 
     const sendForm = async () => {
-        const form = [{
+        const newForm = [{
             userId: session?.user?.id,
             qstUniversity: qstUniversity,
             qstYear: qstYear,
@@ -98,7 +83,7 @@ function form(props: ShowProps) {
             headers: {
                 "Content-Type": "application/json",
             },
-            body: JSON.stringify(form),
+            body: JSON.stringify(newForm),
         })
 
         if (res.status.toString() === "200") {
@@ -130,7 +115,7 @@ function form(props: ShowProps) {
                         <Center>
                             <FormLabel textAlign='center' as='legend' color="teal" fontSize={15}>What is your university ?</FormLabel>
                         </Center>
-                        <Input placeholder='University name' value={qstUniversity} onChange={handleChangeUniversity} />
+                        <Input placeholder='University name' value={qstUniversity} onChange={(e: any) => setQstUniversity(e.target.value)} />
                     </FormControl>
 
 
@@ -138,7 +123,7 @@ function form(props: ShowProps) {
                         <Center>
                             <FormLabel textAlign='center' as='legend' color="teal" fontSize={15}>What is your year ?</FormLabel>
                         </Center>
-                        <Select value={qstYear} onChange={handleChangeYear}>
+                        <Select value={qstYear} onChange={(e: any) => setQstYear(e.target.value)}>
                             <option>1</option>
                             <option>2</option>
                             <option>3</option>
@@ -155,14 +140,14 @@ function form(props: ShowProps) {
                         <Center>
                             <FormLabel textAlign='center' as='legend' color="teal" fontSize={15}>What sport do you play ?</FormLabel>
                         </Center>
-                        <Input placeholder='Sport' value={qstSport} onChange={handleChangeSport} />
+                        <Input placeholder='Sport' value={qstSport} onChange={(e: any) => setQstSport(e.target.value)} />
                     </FormControl>
 
                     <FormControl isRequired>
                         <Center>
                             <FormLabel textAlign='center' as='legend' color="teal" fontSize={15}>What is your sex ?</FormLabel>
                         </Center>
-                        <Select value={qstSex} onChange={handleChangeSex}>
+                        <Select value={qstSex} onChange={(e: any) => setQstSex(e.target.value)}>
                             <option>Female</option>
                             <option>Male</option>
                             <option>Other</option>
@@ -173,7 +158,7 @@ function form(props: ShowProps) {
                         <Center>
                             <FormLabel textAlign='center' as='legend' color="teal" fontSize={15}>What is your idol ?</FormLabel>
                         </Center>
-                        <Input placeholder='Idol name' value={qstIdol} onChange={handleChangeIdol} />
+                        <Input placeholder='Idol name' value={qstIdol} onChange={(e: any) => setQstIdol(e.target.value)} />
                     </FormControl>
 
                     <Text color="gray" fontSize={30}>Emotional</Text>
@@ -181,7 +166,7 @@ function form(props: ShowProps) {
                         <Center>
                             <FormLabel textAlign='center' as='legend' color="teal" fontSize={15}>Do you feel confident in your ability to manage emotions (i.e. anxiety, joy, anger, frustration)?</FormLabel>
                         </Center>
-                        <Select value={qstEmotion1} onChange={handleChangeEmotion1}>
+                        <Select value={qstEmotion1} onChange={(e: any) => setQstEmotion1(e.target.value)}>
                             <option>Not at all</option>
                             <option>A little</option>
                             <option>Moderately</option>
@@ -193,7 +178,7 @@ function form(props: ShowProps) {
                         <Center>
                             <FormLabel textAlign='center' as='legend' color="teal" fontSize={15}>Do you feel comfortable with all emotions, using them in your best interest?</FormLabel>
                         </Center>
-                        <Select value={qstEmotion2} onChange={handleChangeEmotion2}>
+                        <Select value={qstEmotion2} onChange={(e: any) => setQstEmotion2(e.target.value)}>
                             <option>Not at all</option>
                             <option>A little</option>
                             <option>Moderately</option>
@@ -235,7 +220,7 @@ function form(props: ShowProps) {
                         <Center>
                             <FormLabel textAlign='center' as='legend' color="teal" fontSize={15}>Do you feel confident in your knowledge about nutrition, sleep, possible injuries, and your appearance to feel comfortable and happy?</FormLabel>
                         </Center>
-                        <Select value={qstPhysical1} onChange={handleChangePhysical1}>
+                        <Select value={qstPhysical1} onChange={(e: any) => setQstPhysical1(e.target.value)}>
                             <option>Not at all</option>
                             <option>A little</option>
                             <option>Moderately</option>
@@ -260,7 +245,7 @@ function form(props: ShowProps) {
                         <Center>
                             <FormLabel textAlign='center' as='legend' color="teal" fontSize={15}>Which one would you like to improve the most?</FormLabel>
                         </Center>
-                        <Select value={qstPhysical3} onChange={handleChangePhysical3}>
+                        <Select value={qstPhysical3} onChange={(e: any) => setQstPhysical3(e.target.value)}>
                             <option>Nutrition</option>
                             <option>Sleep</option>
                             <option>Potential Injury</option>
@@ -272,7 +257,7 @@ function form(props: ShowProps) {
                         <Center>
                             <FormLabel textAlign='center' as='legend' color="teal" fontSize={15}>I have a healthy and positive mindset and I always tend to prioritize my mental health</FormLabel>
                         </Center>
-                        <Select value={qstMental1} onChange={handleChangeMental1}>
+                        <Select value={qstMental1} onChange={(e: any) => setQstMental1(e.target.value)}>
                             <option>Not at all</option>
                             <option>A little</option>
                             <option>Moderately</option>
@@ -298,7 +283,7 @@ function form(props: ShowProps) {
                         <Center>
                             <FormLabel textAlign='center' as='legend' color="teal" fontSize={15}>I feel that I have a great purpose in life</FormLabel>
                         </Center>
-                        <Select value={qstSpiritual1} onChange={handleChangeSpiritual1}>
+                        <Select value={qstSpiritual1} onChange={(e: any) => setQstSpiritual1(e.target.value)}>
                             <option>Not at all</option>
                             <option>A little</option>
                             <option>Moderately</option>
@@ -324,7 +309,7 @@ function form(props: ShowProps) {
                         <Center>
                             <FormLabel textAlign='center' as='legend' color="teal" fontSize={15}>Do you feel a sense of connection and belonging in your social life?</FormLabel>
                         </Center>
-                        <Select value={qstSocial1} onChange={handleChangeSocial1}>
+                        <Select value={qstSocial1} onChange={(e: any) => setQstSocial1(e.target.value)}>
                             <option>Not at all</option>
                             <option>A little</option>
                             <option>Moderately</option>
@@ -336,7 +321,7 @@ function form(props: ShowProps) {
                         <Center>
                             <FormLabel textAlign='center' as='legend' color="teal" fontSize={15}>Are you surrounded by meaningful, supportive, and positive people that make you feel safe, respected, and accepted?</FormLabel>
                         </Center>
-                        <Select value={qstSocial2} onChange={handleChangeSocial2}>
+                        <Select value={qstSocial2} onChange={(e: any) => setQstSocial2(e.target.value)}>
                             <option>Not at all</option>
                             <option>A little</option>
                             <option>Moderately</option>
@@ -447,7 +432,7 @@ function form(props: ShowProps) {
                         <Center>
                             <FormLabel textAlign='center' as='legend' color="teal" fontSize={15}>I want to learn to manage my financials more consistently and thoughtfully</FormLabel>
                         </Center>
-                        <Select value={qstFinancial2} onChange={handleChangeFinancial2}>
+                        <Select value={qstFinancial2} onChange={(e: any) => setQstFinancial2(e.target.value)}>
                             <option>Completely disagree</option>
                             <option>Disagree</option>
                             <option>Somewhat agree</option>
@@ -473,7 +458,7 @@ function form(props: ShowProps) {
                         <Center>
                             <FormLabel textAlign='center' as='legend' color="teal" fontSize={15}>Do you feel that you have created a healthy work-life balance</FormLabel>
                         </Center>
-                        <Select value={qstOccupational1} onChange={handleChangeOccupational1}>
+                        <Select value={qstOccupational1} onChange={(e: any) => setQstOccupational1(e.target.value)}>
                             <option>Not at all</option>
                             <option>A little</option>
                             <option>Moderately</option>
@@ -498,8 +483,6 @@ function form(props: ShowProps) {
                 </VStack>
             </Box>
         </Center>
-
-
     );
 };
 
@@ -508,7 +491,7 @@ export default form;
 export async function getServerSideProps(context: any) {
     const session = await getSession(context);
     const res = await fetch(process.env.API_URL + "users/" + session?.user?.id);
-    const user = await res.json()
+    const user = await res.json();
     return {
         props: {
             user: user,
