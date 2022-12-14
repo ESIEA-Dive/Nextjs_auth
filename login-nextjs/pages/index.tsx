@@ -60,7 +60,13 @@ function Home(props: ShowProps) {
     if (value === "")
       setCourses(props.courses);
     else {
-      const result = props.courses.filter((x: { title: string; }) => x.title.toLowerCase().includes(value.toLowerCase()));
+      const result = props.courses.filter((
+        x: { title: string; teacher: string; description: string; pillar: string }) => 
+        x.title.toLowerCase().includes(value.toLowerCase())
+        || x.teacher.toLowerCase().includes(value.toLowerCase())
+        || x.description.toLowerCase().includes(value.toLowerCase())
+        || x.pillar.toLowerCase().includes(value.toLowerCase())
+      );
       setCourses(result);
     }
   }
@@ -261,7 +267,7 @@ export async function getServerSideProps(context: any) {
           }
         }
       }
-      else{
+      else {
         const resultCourses = await fetch(process.env.API_URL + "courses/student/" + session?.user?.id, {
           method: "get",
         });

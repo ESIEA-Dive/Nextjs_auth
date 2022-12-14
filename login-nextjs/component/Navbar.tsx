@@ -19,7 +19,7 @@ function Navbar() {
         </NextLink>
 
 
-        <Text fontWeight={600} marginInline={5} color="darkred" fontSize={20} onClick={onOpen} _hover={{cursor: "pointer"}}>Sign out</Text>
+        <Text fontWeight={600} marginInline={5} color="darkred" fontSize={20} onClick={onOpen} _hover={{cursor: "pointer"}}>Logout</Text>
         <Modal isOpen={isOpen} onClose={onClose}>
           <ModalOverlay />
           <ModalContent>
