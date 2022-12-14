@@ -46,3 +46,17 @@ export interface Form {
   qstOccupational1: string,
   qstOccupational2: string,
 }
+
+// Interface to define our Class model on the frontend
+export interface Class {
+  id: number,
+  userId: string,
+  title: string,
+  date: string,
+  duration: string,
+  price: number,
+  description: string,
+  pillar: string,
+  teacher: string,
+  places: number,
+}

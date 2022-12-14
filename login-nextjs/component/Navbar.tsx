@@ -7,9 +7,9 @@ function Navbar() {
   const { data: session } = useSession();
 
   return (
-    <Flex justifyContent="space-around" p={20}>
+    <Flex justifyContent="space-around" p={10} bg='teal'>
       <NextLink href="/">
-        <Button>Home</Button>
+        <Button>Classes</Button>
       </NextLink>
 
       {session && (<NextLink href={"/profile"}>
