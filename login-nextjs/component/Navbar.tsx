@@ -11,7 +11,7 @@ function Navbar() {
     return (
       <Flex justifyContent="space-around" p={10} bg='teal'>
         <NextLink href={"/"}>
-          <Button>Classes</Button>
+          <Button>Courses</Button>
         </NextLink>
 
         <NextLink href={"/profile"}>

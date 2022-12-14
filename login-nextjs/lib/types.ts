@@ -8,7 +8,7 @@ export interface ResponseFuncs {
 
 // Interface to define our User model on the frontend
 export interface User {
-  id: number,
+  id: string,
   name: string,
   email: string,
   hashedPassword: string,
@@ -17,13 +17,13 @@ export interface User {
   status: string,
 }
 
-// Interface to define our Class model on the frontend
-export interface Class {
-  id: number,
+// Interface to define our Course model on the frontend
+export interface Course {
+  id: string,
   userId: string,
   title: string,
-  date: Date,
-  duration: Date,
+  date: string,
+  duration: string,
   price: number,
   description: string,
   pillar: string,
@@ -33,7 +33,7 @@ export interface Class {
 
 // Interface to define our Form model on the frontend
 export interface Form {
-  id: number,
+  id: string,
   userId: string,
   qstUniversity: string,
   qstYear: string,
@@ -61,18 +61,4 @@ export interface Form {
   qstFinancial3: string,
   qstOccupational1: string,
   qstOccupational2: string,
-}
-
-// Interface to define our Class model on the frontend
-export interface Class {
-  id: number,
-  userId: string,
-  title: string,
-  date: string,
-  duration: string,
-  price: number,
-  description: string,
-  pillar: string,
-  teacher: string,
-  places: number,
 }

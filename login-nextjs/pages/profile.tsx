@@ -140,7 +140,7 @@ function Profile(props: ShowProps) {
                     </ModalContent>
                 </Modal>
                 <VStack>
-                    <Heading>Profile</Heading>
+                    <Heading  mt={10}>Profile</Heading>
                     <Image
                         src={userPicture}
                         alt='picture'

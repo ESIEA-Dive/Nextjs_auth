@@ -1,7 +1,7 @@
 import { NextApiRequest, NextApiResponse } from "next"
 import dbConnect from "../../../lib/dbConnect"
 import { ResponseFuncs } from "../../../lib/types"
-import Class from "../../../model/Class";
+import Course from "../../../model/Course"
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   //capture request method, we type it as a key of ResponseFunc to reduce typing later
@@ -10,25 +10,12 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   //function for catch errors
   const catcher = (error: Error) => res.status(400).json({ error })
 
-  // GRAB ID FROM req.query (where next stores params)
-  const id: string = req.query.id as string
-
-  // Potential Responses for /todos/:id
+  // Potential Responses
   const handleCase: ResponseFuncs = {
-    // RESPONSE FOR GET REQUESTS
-    GET: async (req: NextApiRequest, res: NextApiResponse) => {
+    // RESPONSE POST REQUESTS
+    POST: async (req: NextApiRequest, res: NextApiResponse) => {
       await dbConnect() // connect to database
-      return res.json(await Class.findById(id).catch(catcher))
-    },
-    // RESPONSE PUT REQUESTS
-    PUT: async (req: NextApiRequest, res: NextApiResponse) => {
-      await dbConnect() // connect to database
-      return res.json(await Class.findByIdAndUpdate(id, req.body, { new: true }).catch(catcher))
-    },
-    // RESPONSE FOR DELETE REQUESTS
-    DELETE: async (req: NextApiRequest, res: NextApiResponse) => {
-      await dbConnect() // connect to database
-      return res.json(await Class.findByIdAndRemove(id).catch(catcher))
+      return res.json(await Course.create(req.body).catch(catcher))
     },
   }
 

@@ -78,7 +78,7 @@ function form(props: ShowProps) {
             qstOccupational2: qstOccupational2,
         }]
 
-        const res = await fetch(props.url + "form", {
+        const res = await fetch(props.url + "form/", {
             method: "post",
             headers: {
                 "Content-Type": "application/json",
