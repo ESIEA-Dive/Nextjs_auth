@@ -21,6 +21,7 @@ export interface User {
 export interface Course {
   id: string,
   userId: string,
+  userImage: string,
   title: string,
   date: string,
   duration: string,

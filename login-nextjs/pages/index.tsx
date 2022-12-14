@@ -1,7 +1,7 @@
 import { useSession, getSession } from "next-auth/react";
-import { Input, Flex, Button, Text, Heading, InputRightElement, InputGroup, Modal, ModalOverlay, ModalContent, ModalHeader, ModalCloseButton, ModalFooter, useDisclosure, VStack, Center, HStack, Select, Textarea, Card, CardBody, Image, Stack, Divider, CardFooter, ButtonGroup } from "@chakra-ui/react";
+import { Input, Flex, Button, Text, Heading, InputRightElement, InputGroup, Modal, ModalOverlay, ModalContent, ModalHeader, ModalCloseButton, ModalFooter, useDisclosure, VStack, Center, HStack, Select, Textarea, Card, CardBody, Image, Stack, Divider, CardFooter, ButtonGroup, Wrap, WrapItem, CardHeader, Avatar, Box, IconButton } from "@chakra-ui/react";
 import { useState } from "react";
-import { SearchIcon } from '@chakra-ui/icons'
+import { SearchIcon, StarIcon } from '@chakra-ui/icons'
 
 // Define Prop Interface
 interface ShowProps {
@@ -12,22 +12,25 @@ interface ShowProps {
 
 function Home(props: ShowProps) {
   const { data: session } = useSession();
-  const { isOpen, onOpen, onClose } = useDisclosure();
+  const { isOpen: isCreateOpen, onOpen: onCreateOpen, onClose: onCreateClose } = useDisclosure();
 
   const [valueTitle, setValueTitle] = useState("");
   const [valueDate, setValueDate] = useState("");
   const [valueDuration, setValueDuration] = useState("");
   const [valuePrice, setValuePrice] = useState();
   const [valueDescription, setValueDescription] = useState("");
-  const [valuePillar, setValuePillar] = useState("");
+  const [valuePillar, setValuePillar] = useState("Emotional");
   const [valuePlaces, setValuePlaces] = useState();
 
   const [searchField, setSearchField] = useState("");
   const [courses, setCourses] = useState(props.courses);
+  const { isOpen: isDeleteOpen, onOpen: onDeleteOpen, onClose: onDeleteClose } = useDisclosure();
+  const [idCourseToDelete, setIdCourseToDelete] = useState("");
 
   const createCourse = async () => {
     const newCourse = [{
       userId: session?.user?.id,
+      userImage: session?.user?.image,
       title: valueTitle,
       date: valueDate,
       duration: valueDuration,
@@ -45,7 +48,7 @@ function Home(props: ShowProps) {
       body: JSON.stringify(newCourse),
     })
     if (res.status === 200) {
-      const res2 = await fetch(props.url + "courses/" + session?.user?.id, {
+      const res2 = await fetch(props.url + "courses/teacher/" + session?.user?.id, {
         method: "get",
       })
       const coursesUpdated = await res2.json();
@@ -75,33 +78,33 @@ function Home(props: ShowProps) {
   return (
     <Flex direction="column" alignItems="center" justifyContent="center">
       <Heading mt={10}>Courses</Heading>
-      <Modal isOpen={isOpen} onClose={onClose}>
+      <Modal isOpen={isCreateOpen} onClose={onCreateClose}>
         <ModalOverlay />
         <ModalContent>
           <ModalHeader>Add a new course</ModalHeader>
-          <VStack>
+          <VStack alignItems='left' style={{ paddingInline: "40px" }}>
             <HStack>
-              <Text text-align='left' fontSize={15}>Title</Text>
+              <Text width={100} text-align='left' fontSize={15}>Title</Text>
               <Input onChange={(e: any) => setValueTitle(e.target.value)} value={valueTitle} placeholder="Title" size="sm" />
             </HStack>
             <HStack>
-              <Text text-align='left' fontSize={15}>Date and time</Text>
+              <Text width={100} text-align='left' fontSize={15}>Date</Text>
               <Input onChange={(e: any) => setValueDate(e.target.value)} value={valueDate} placeholder="Date and time" size="sm" type="datetime-local" />
             </HStack>
             <HStack>
-              <Text text-align='left' fontSize={15}>Duration</Text>
+              <Text width={100} text-align='left' fontSize={15}>Duration</Text>
               <Input onChange={(e: any) => setValueDuration(e.target.value)} value={valueDuration} placeholder="Duration" size="sm" type="time"></Input>
             </HStack>
             <HStack>
-              <Text text-align='left' fontSize={15}>Price</Text>
+              <Text width={100} text-align='left' fontSize={15}>Price ($)</Text>
               <Input onChange={(e: any) => setValuePrice(e.target.value)} value={valuePrice} placeholder="Price" size="sm" type="number" />
             </HStack>
             <HStack>
-              <Text text-align='left' fontSize={15}>Description</Text>
+              <Text width={100} text-align='left' fontSize={15}>Description</Text>
               <Textarea onChange={(e: any) => setValueDescription(e.target.value)} value={valueDescription} placeholder="Description" size="sm" />
             </HStack>
             <HStack>
-              <Text text-align='left' fontSize={15}>Pillar</Text>
+              <Text width={100} text-align='left' fontSize={15}>Pillar</Text>
               <Select onChange={(e: any) => setValuePillar(e.target.value)} value={valuePillar} size="sm">
                 <option>Emotional</option>
                 <option>Physical</option>
@@ -114,17 +117,17 @@ function Home(props: ShowProps) {
               </Select>
             </HStack>
             <HStack>
-              <Text text-align='left' fontSize={15}>Places available</Text>
+              <Text width={100} text-align='left' fontSize={15}>Places</Text>
               <Input onChange={(e: any) => setValuePlaces(e.target.value)} value={valuePlaces} placeholder="Places available" size="sm" type="number" />
             </HStack>
           </VStack>
           <ModalCloseButton />
           <ModalFooter>
 
-            <Button colorScheme='teal' mr={4} onClick={() => { createCourse(); onClose(); }}>
+            <Button colorScheme='teal' mr={4} onClick={() => { createCourse(); onCreateClose(); }}>
               Validate
             </Button>
-            <Button variant='ghost' onClick={onClose} >
+            <Button variant='ghost' onClick={onCreateClose} >
               Close
             </Button>
           </ModalFooter>
@@ -137,48 +140,92 @@ function Home(props: ShowProps) {
             type='text'
             placeholder='Search for a course'
             value={searchField}
+            style={{ border: "1px solid #D3D3D3" }}
             onChange={(e: any) => { setSearchField(e.target.value); searchForCourses(e.target.value) }}
           />
           <InputRightElement>
             <Button onClick={() => { searchForCourses(searchField) }} rightIcon={<SearchIcon />} variant='solid' colorScheme='blue' pl={2}></Button>
           </InputRightElement>
         </InputGroup>
-        <Button onClick={onOpen} ml={10} colorScheme='teal' size='md'>Add course</Button>
+        {props.user.status === "Teacher" && (<Button onClick={onCreateOpen} ml={10} colorScheme='teal' size='md'>Add course</Button>)}
       </HStack>
 
-      <HStack mt={5}>{courses.map(
+      <Wrap spacing='20px' justify='center' pt={5} pb={5}>{courses.map(
         (course: any, index: number) =>
-          <Card key={index} height={300} width={350}>
-            <CardBody>
-              <Stack mt='2' spacing='2'>
-                <Heading size='xs'>{course.title}</Heading>
-                <Text>
-                  {course.description}
-                </Text>
-                <Text color='blue.600' fontSize='14'>
-                  ${course.price}
-                </Text>
-                <Text fontSize={12}>
-                  {course.date}
-                </Text>
-                <Text fontSize={12}>
-                  {course.places} places available
-                </Text>
-              </Stack>
-            </CardBody>
-            <Divider />
-            <CardFooter>
-              <ButtonGroup spacing=''>
-                <Button variant='solid' colorScheme='blue'>
-                  Edit
-                </Button>
-                <Button variant='ghost' colorScheme='red' onClick={() => { deleteCourse(course._id) }}>
-                  Delete
-                </Button>
-              </ButtonGroup>
-            </CardFooter>
-          </Card>)}
-      </HStack>
+          <WrapItem key={index}>
+            <Card height={350} width={350} style={{ border: "1px solid #D3D3D3" }}>
+              <CardHeader>
+                <Flex>
+                  <Flex flex='1' gap='4' alignItems='center' flexWrap='wrap'>
+                    <Avatar name={course.teacher} src={course.userImage} />
+                    <Box>
+                      <Heading size='sm'>{course.teacher}</Heading>
+                      <Text>{course.title}</Text>
+                    </Box>
+                  </Flex>
+                  <IconButton
+                    variant='ghost'
+                    colorScheme='gray'
+                    aria-label='See menu'
+                    icon={<StarIcon style={{ color: "grey" }} />}
+                  />
+                </Flex>
+              </CardHeader>
+              <CardBody >
+                <Stack spacing='1'>
+                  <Text>
+                    {course.description}
+                  </Text>
+                  <Text fontSize={12}>
+                    Date : {course.date} - Duration : {course.duration}
+                  </Text>
+                  <Text fontSize={12}>
+                    {course.places} places available
+                  </Text>
+                  <Text fontSize={12}>
+                    PILLAR : {course.pillar}
+                  </Text>
+                </Stack>
+              </CardBody>
+              <Divider />
+              <CardFooter>
+                <Flex style={{ width: "100%" }} justifyContent={"space-between"}>
+                  {props.user.status === "Teacher" && (<ButtonGroup spacing=''>
+                    <Button variant='solid' colorScheme='blue'>
+                      Edit
+                    </Button>
+                    <Button variant='ghost' colorScheme='red' onClick={() => { setIdCourseToDelete(course._id); onDeleteOpen() }}>
+                      Delete
+                    </Button>
+                  </ButtonGroup>)}
+                  {props.user.status === "Student" && (<ButtonGroup spacing=''>
+                    <Button variant='solid' colorScheme='blue'>
+                      Join
+                    </Button>
+                  </ButtonGroup>)}
+                  <Text color='black' fontSize='20' style={{ border: "1px solid black", borderRadius: "10px", padding: "5px 15px" }}>
+                    ${course.price}
+                  </Text>
+                </Flex>
+              </CardFooter>
+            </Card>
+          </WrapItem>)}
+      </Wrap>
+      <Modal isOpen={isDeleteOpen} onClose={onDeleteClose}>
+        <ModalOverlay />
+        <ModalContent>
+          <ModalHeader>Delete this course ?</ModalHeader>
+          <ModalCloseButton />
+          <ModalFooter>
+            <Button colorScheme='teal' mr={4} onClick={() => { deleteCourse(idCourseToDelete); onDeleteClose(); }}>
+              Yes
+            </Button>
+            <Button variant='ghost' onClick={onDeleteClose} >
+              No
+            </Button>
+          </ModalFooter>
+        </ModalContent>
+      </Modal>
     </Flex>
   );
 };
@@ -201,17 +248,33 @@ export async function getServerSideProps(context: any) {
       }
     }
     else {
-      const resultCourses = await fetch(process.env.API_URL + "courses/" + session?.user?.id, {
-        method: "get",
-      });
-      const courses = await resultCourses.json();
-      return {
-        props: {
-          user: user,
-          url: process.env.API_URL,
-          courses: courses,
+      if (user.status === "Teacher") {
+        const resultCourses = await fetch(process.env.API_URL + "courses/teacher/" + session?.user?.id, {
+          method: "get",
+        });
+        const courses = await resultCourses.json();
+        return {
+          props: {
+            user: user,
+            url: process.env.API_URL,
+            courses: courses,
+          }
         }
       }
+      else{
+        const resultCourses = await fetch(process.env.API_URL + "courses/student/" + session?.user?.id, {
+          method: "get",
+        });
+        const courses = await resultCourses.json();
+        return {
+          props: {
+            user: user,
+            url: process.env.API_URL,
+            courses: courses,
+          }
+        }
+      }
+
     }
   }
 

@@ -7,6 +7,10 @@ const courseSchema = new Schema({
         type: String,
         required: true,
     },
+    userImage: {
+        type: String,
+        required: true,
+    },
     title: {
         type: String,
         required: true,
