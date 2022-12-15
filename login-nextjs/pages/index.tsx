@@ -30,6 +30,7 @@ function Home(props: ShowProps) {
   const [idCourseToDelete, setIdCourseToDelete] = useState("");
 
   const [coursesJoined, setCoursesJoined] = useState(props.coursesJoined);
+  const [coursesJoinedForSearch, setCoursesJoinedForSearch] = useState(props.coursesJoined);
   const [myCoursesSection, setMyCoursesSection] = useState(false);
 
   const createCourse = async () => {
@@ -62,17 +63,31 @@ function Home(props: ShowProps) {
   }
 
   const searchForCourses = (value: string) => {
-    if (value === "")
-      setCourses(coursesForSearch);
+    if (value === "") {
+      if (!myCoursesSection) setCourses(coursesForSearch);
+      else { setCoursesJoined(coursesJoinedForSearch) };
+    }
     else {
-      const result = coursesForSearch.filter((
-        x: { title: string; teacherName: string; description: string; pillar: string }) =>
-        x.title.toLowerCase().includes(value.toLowerCase())
-        || x.teacherName.toLowerCase().includes(value.toLowerCase())
-        || x.description.toLowerCase().includes(value.toLowerCase())
-        || x.pillar.toLowerCase().includes(value.toLowerCase())
-      );
-      setCourses(result);
+      if (!myCoursesSection) {
+        const result = coursesForSearch.filter((
+          x: { title: string; teacherName: string; description: string; pillar: string }) =>
+          x.title.toLowerCase().includes(value.toLowerCase())
+          || x.teacherName.toLowerCase().includes(value.toLowerCase())
+          || x.description.toLowerCase().includes(value.toLowerCase())
+          || x.pillar.toLowerCase().includes(value.toLowerCase())
+        );
+        setCourses(result);
+      }
+      else {
+        const result = coursesJoinedForSearch.filter((
+          x: { title: string; teacherName: string; description: string; pillar: string }) =>
+          x.title.toLowerCase().includes(value.toLowerCase())
+          || x.teacherName.toLowerCase().includes(value.toLowerCase())
+          || x.description.toLowerCase().includes(value.toLowerCase())
+          || x.pillar.toLowerCase().includes(value.toLowerCase())
+        );
+        setCoursesJoined(result);
+      }
     }
   }
 
@@ -83,6 +98,7 @@ function Home(props: ShowProps) {
     if (res.status === 200) {
       const result = props.courses.filter((x: { _id: string; }) => !x._id.toLowerCase().includes(id.toLowerCase()));
       setCourses(result);
+      setCoursesForSearch(result);
     }
   }
 
@@ -100,22 +116,36 @@ function Home(props: ShowProps) {
     })
     if (res.status === 200) {
       const OneMorePeopleInCourse = { ...course, participants: course.participants + 1 }
-      const res3 = await fetch(props.url + "courses/" + course._id, {
+      const res2 = await fetch(props.url + "courses/" + course._id, {
         method: "put",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify(OneMorePeopleInCourse),
       })
-      const coursesUpdated = await res3.json();
-      for (let x = 0; x < courses.length; x++) {
-        if (courses[x]._id === course._id)
-          delete courses[x];
+      if (res2.status === 200) {
+        const res3 = await fetch(props.url + "courses/", {
+          method: "get",
+        })
+        const newCourses = await res3.json();
+        setCourses(newCourses);
+        setCoursesForSearch(newCourses);
+
+        const res4 = await fetch(props.url + "joincourses/student/" + session?.user?.id, {
+          method: "get",
+        });
+        const listCoursesJoined = await res4.json();
+        let tmpCoursesJoined: string[] = [];
+        for (let x = 0; x < listCoursesJoined.length; x++) {
+          const res = await fetch(props.url + "courses/" + listCoursesJoined[x].courseId, {
+            method: "get",
+          });
+          const result = await res.json();
+          tmpCoursesJoined.push(result);
+        }
+        setCoursesJoined(tmpCoursesJoined);
+        setCoursesJoinedForSearch(tmpCoursesJoined);
       }
-      const newCourse = [].concat(courses, coursesUpdated);
-      setCourses(newCourse.flat());
-      const newCoursesJoined = [].concat(coursesJoined, coursesUpdated);
-      setCoursesJoined(newCoursesJoined.flat());
     }
   }
 
@@ -125,26 +155,37 @@ function Home(props: ShowProps) {
     })
     if (res.status === 200) {
       const OneLessPeopleInCourse = { ...course, participants: course.participants - 1 }
-      console.log(OneLessPeopleInCourse);
-      const res3 = await fetch(props.url + "courses/" + course._id, {
+      const res2 = await fetch(props.url + "courses/" + course._id, {
         method: "put",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify(OneLessPeopleInCourse),
       })
-      const coursesUpdated = await res3.json();
-      for (let x = 0; x < courses.length; x++) {
-        if (courses[x]._id === course._id)
-          delete courses[x];
+
+      if (res2.status === 200) {
+        const res3 = await fetch(props.url + "courses/", {
+          method: "get",
+        })
+        const newCourses = await res3.json();
+        setCourses(newCourses);
+        setCoursesForSearch(newCourses);
+
+        const res4 = await fetch(props.url + "joincourses/student/" + session?.user?.id, {
+          method: "get",
+        });
+        const listCoursesJoined = await res4.json();
+        let tmpCoursesJoined: string[] = [];
+        for (let x = 0; x < listCoursesJoined.length; x++) {
+          const res = await fetch(props.url + "courses/" + listCoursesJoined[x].courseId, {
+            method: "get",
+          });
+          const result = await res.json();
+          tmpCoursesJoined.push(result);
+        }
+        setCoursesJoined(tmpCoursesJoined);
+        setCoursesJoinedForSearch(tmpCoursesJoined);
       }
-      for (let x = 0; x < coursesJoined.length; x++) {
-        if (coursesJoined[x]._id === course._id)
-          delete coursesJoined[x];
-      }
-      const newCourse = [].concat(courses, coursesUpdated);
-      setCourses(newCourse.flat());
-      setCoursesJoined(coursesJoined);
     }
   }
 
@@ -155,14 +196,14 @@ function Home(props: ShowProps) {
         <Heading
           color={myCoursesSection ? 'grey' : 'teal'}
           _hover={{ cursor: 'pointer' }}
-          onClick={() => { setMyCoursesSection(false) }}
+          onClick={() => { setMyCoursesSection(false); setSearchField(""); searchForCourses("") }}
         >
           Join Courses
         </Heading>
         <Heading
           color={myCoursesSection ? 'teal' : 'grey'}
           _hover={{ cursor: 'pointer' }}
-          onClick={() => { setMyCoursesSection(true) }}
+          onClick={() => { setMyCoursesSection(true); setSearchField(""); searchForCourses("") }}
         >
           My Courses
         </Heading>
@@ -212,7 +253,6 @@ function Home(props: ShowProps) {
           </VStack>
           <ModalCloseButton />
           <ModalFooter>
-
             <Button colorScheme='teal' mr={4} onClick={() => { createCourse(); onCreateClose(); }}>
               Validate
             </Button>
@@ -293,8 +333,11 @@ function Home(props: ShowProps) {
                     </Button>
                   </ButtonGroup>)}
                   {props.user.status === "Student" && (<ButtonGroup spacing=''>
-                    {!myCoursesSection && (<Button variant='solid' colorScheme='blue' onClick={() => { joinCourse(course) }}>
+                    {(!myCoursesSection && (coursesJoined.some((x: { _id: string; }) => x._id === course._id )) === false) && (<Button variant='solid' colorScheme='blue' onClick={() => { joinCourse(course) }}>
                       Join
+                    </Button>)}
+                    {(!myCoursesSection && (coursesJoined.some((x: { _id: string; }) => x._id === course._id )) === true) && (<Button variant='solid' colorScheme='red' onClick={() => { leaveCourse(course) }}>
+                      Leave
                     </Button>)}
                     {myCoursesSection && (<Button variant='solid' colorScheme='red' onClick={() => { leaveCourse(course) }}>
                       Leave
@@ -368,7 +411,7 @@ export async function getServerSideProps(context: any) {
         });
         const listCoursesJoined = await resultCoursesJoined.json();
         let coursesJoined: string[] = [];
-        for(let x=0; x < listCoursesJoined.length; x++){
+        for (let x = 0; x < listCoursesJoined.length; x++) {
           const res = await fetch(process.env.API_URL + "courses/" + listCoursesJoined[x].courseId, {
             method: "get",
           });
@@ -384,7 +427,6 @@ export async function getServerSideProps(context: any) {
           }
         }
       }
-
     }
   }
 
