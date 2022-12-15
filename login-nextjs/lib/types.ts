@@ -20,16 +20,24 @@ export interface User {
 // Interface to define our Course model on the frontend
 export interface Course {
   id: string,
-  userId: string,
-  userImage: string,
+  teacherId: string,
+  teacherImage: string,
+  teacherName: string,
   title: string,
   date: string,
   duration: string,
   price: number,
   description: string,
   pillar: string,
-  teacher: string,
   places: number,
+  participants: number,
+}
+
+// Interface to define our User model on the frontend
+export interface CourseJoined {
+  id: string,
+  studentId: string,
+  courseId: string,
 }
 
 // Interface to define our Form model on the frontend

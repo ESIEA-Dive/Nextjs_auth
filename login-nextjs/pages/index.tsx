@@ -1,13 +1,14 @@
 import { useSession, getSession } from "next-auth/react";
 import { Input, Flex, Button, Text, Heading, InputRightElement, InputGroup, Modal, ModalOverlay, ModalContent, ModalHeader, ModalCloseButton, ModalFooter, useDisclosure, VStack, Center, HStack, Select, Textarea, Card, CardBody, Image, Stack, Divider, CardFooter, ButtonGroup, Wrap, WrapItem, CardHeader, Avatar, Box, IconButton } from "@chakra-ui/react";
 import { useState } from "react";
-import { SearchIcon, StarIcon } from '@chakra-ui/icons'
+import { SearchIcon, StarIcon, SettingsIcon } from '@chakra-ui/icons'
 
 // Define Prop Interface
 interface ShowProps {
   user: any
   url: string
   courses: any
+  coursesJoined: any
 }
 
 function Home(props: ShowProps) {
@@ -27,18 +28,22 @@ function Home(props: ShowProps) {
   const { isOpen: isDeleteOpen, onOpen: onDeleteOpen, onClose: onDeleteClose } = useDisclosure();
   const [idCourseToDelete, setIdCourseToDelete] = useState("");
 
+  const [coursesJoined, setCoursesJoined] = useState(props.coursesJoined);
+  const [myCoursesSection, setMyCoursesSection] = useState(false);
+
   const createCourse = async () => {
     const newCourse = [{
-      userId: session?.user?.id,
-      userImage: session?.user?.image,
+      teacherId: session?.user?.id,
+      teacherImage: session?.user?.image,
+      teacherName: session?.user?.name,
       title: valueTitle,
       date: valueDate,
       duration: valueDuration,
       price: valuePrice,
       description: valueDescription,
       pillar: valuePillar,
-      teacher: session?.user?.name,
-      places: valuePlaces
+      places: valuePlaces,
+      participants: 0,
     }]
     const res = await fetch(props.url + "courses/", {
       method: "post",
@@ -61,9 +66,9 @@ function Home(props: ShowProps) {
       setCourses(props.courses);
     else {
       const result = props.courses.filter((
-        x: { title: string; teacher: string; description: string; pillar: string }) => 
+        x: { title: string; teacherName: string; description: string; pillar: string }) =>
         x.title.toLowerCase().includes(value.toLowerCase())
-        || x.teacher.toLowerCase().includes(value.toLowerCase())
+        || x.teacherName.toLowerCase().includes(value.toLowerCase())
         || x.description.toLowerCase().includes(value.toLowerCase())
         || x.pillar.toLowerCase().includes(value.toLowerCase())
       );
@@ -81,9 +86,87 @@ function Home(props: ShowProps) {
     }
   }
 
+  const joinCourse = async (course: any) => {
+    const joinCourse = [{
+      studentId: session?.user?.id,
+      courseId: course._id,
+    }]
+    const res = await fetch(props.url + "joincourses/", {
+      method: "post",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(joinCourse),
+    })
+    if (res.status === 200) {
+      const OneMorePeopleInCourse = { ...course, participants: course.participants + 1 }
+      const res3 = await fetch(props.url + "courses/" + course._id, {
+        method: "put",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(OneMorePeopleInCourse),
+      })
+      const coursesUpdated = await res3.json();
+      for (let x = 0; x < courses.length; x++) {
+        if (courses[x]._id === course._id)
+          delete courses[x];
+      }
+      const newCourse = [].concat(courses, coursesUpdated);
+      setCourses(newCourse.flat());
+      const newCoursesJoined = [].concat(coursesJoined, coursesUpdated);
+      setCoursesJoined(newCoursesJoined.flat());
+    }
+  }
+
+  const leaveCourse = async (course: any) => {
+    const res = await fetch(props.url + "joincourses/" + course.courseId, {
+      method: "delete",
+    })
+    if (res.status === 200) {
+      const OneLessPeopleInCourse = { ...course, participants: course.participants - 1 }
+      const res3 = await fetch(props.url + "courses/" + course.courseId, {
+        method: "put",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(OneLessPeopleInCourse),
+      })
+      const coursesUpdated = await res3.json();
+      for (let x = 0; x < courses.length; x++) {
+        if (courses[x]._id === course._id)
+          delete courses[x];
+      }
+      for (let x = 0; x < coursesJoined.length; x++) {
+        if (coursesJoined[x]._id === course._id)
+          delete coursesJoined[x];
+      }
+      const newCourse = [].concat(courses, coursesUpdated);
+      setCourses(newCourse.flat());
+      const newCoursesJoined = [].concat(coursesJoined, coursesUpdated);
+      setCoursesJoined(newCoursesJoined.flat());
+    }
+  }
+
   return (
     <Flex direction="column" alignItems="center" justifyContent="center">
-      <Heading mt={10}>Courses</Heading>
+      {props.user.status === "Teacher" && (<Heading mt={10}>My Courses</Heading>)}
+      {props.user.status === "Student" && (<HStack mt={10} spacing={20}>
+        <Heading
+          color={myCoursesSection ? 'grey' : 'teal'}
+          _hover={{ cursor: 'pointer' }}
+          onClick={() => { setMyCoursesSection(false) }}
+        >
+          Join Courses
+        </Heading>
+        <Heading
+          color={myCoursesSection ? 'teal' : 'grey'}
+          _hover={{ cursor: 'pointer' }}
+          onClick={() => { setMyCoursesSection(true) }}
+        >
+          My Courses
+        </Heading>
+      </HStack>)}
       <Modal isOpen={isCreateOpen} onClose={onCreateClose}>
         <ModalOverlay />
         <ModalContent>
@@ -153,19 +236,24 @@ function Home(props: ShowProps) {
             <Button onClick={() => { searchForCourses(searchField) }} rightIcon={<SearchIcon />} variant='solid' colorScheme='blue' pl={2}></Button>
           </InputRightElement>
         </InputGroup>
+        <Button onClick={undefined} rightIcon={<SettingsIcon />} variant='solid' colorScheme='blue' pl={2}></Button>
         {props.user.status === "Teacher" && (<Button onClick={onCreateOpen} ml={10} colorScheme='teal' size='md'>Add course</Button>)}
       </HStack>
-
-      <Wrap spacing='20px' justify='center' pt={5} pb={5}>{courses.map(
+      <Wrap
+        spacing='20px'
+        justify='center'
+        pt={5}
+        pb={5}
+      >{(props.user.status === 'Teacher' ? courses : myCoursesSection ? coursesJoined : courses).map(
         (course: any, index: number) =>
           <WrapItem key={index}>
             <Card height={350} width={350} style={{ border: "1px solid #D3D3D3" }}>
               <CardHeader>
                 <Flex>
                   <Flex flex='1' gap='4' alignItems='center' flexWrap='wrap'>
-                    <Avatar name={course.teacher} src={course.userImage} />
+                    <Avatar name={course.teacherName} src={course.teacherImage} />
                     <Box>
-                      <Heading size='sm'>{course.teacher}</Heading>
+                      <Heading size='sm'>{course.teacherName}</Heading>
                       <Text>{course.title}</Text>
                     </Box>
                   </Flex>
@@ -186,7 +274,7 @@ function Home(props: ShowProps) {
                     Date : {course.date} - Duration : {course.duration}
                   </Text>
                   <Text fontSize={12}>
-                    {course.places} places available
+                    {course.participants} / {course.places} capacity
                   </Text>
                   <Text fontSize={12}>
                     PILLAR : {course.pillar}
@@ -205,9 +293,12 @@ function Home(props: ShowProps) {
                     </Button>
                   </ButtonGroup>)}
                   {props.user.status === "Student" && (<ButtonGroup spacing=''>
-                    <Button variant='solid' colorScheme='blue'>
+                    {!myCoursesSection &&(<Button variant='solid' colorScheme='blue' onClick={() => { joinCourse(course) }}>
                       Join
-                    </Button>
+                    </Button>)}
+                    {myCoursesSection &&(<Button variant='solid' colorScheme='red' onClick={() => { leaveCourse(course) }}>
+                      Leave
+                    </Button>)}
                   </ButtonGroup>)}
                   <Text color='black' fontSize='20' style={{ border: "1px solid black", borderRadius: "10px", padding: "5px 15px" }}>
                     ${course.price}
@@ -268,15 +359,20 @@ export async function getServerSideProps(context: any) {
         }
       }
       else {
-        const resultCourses = await fetch(process.env.API_URL + "courses/student/" + session?.user?.id, {
+        const resultCourses = await fetch(process.env.API_URL + "courses", {
           method: "get",
         });
         const courses = await resultCourses.json();
+        const resultCoursesJoined = await fetch(process.env.API_URL + "joincourses/student/" + session?.user?.id, {
+          method: "get",
+        });
+        const coursesJoined = await resultCoursesJoined.json();
         return {
           props: {
             user: user,
             url: process.env.API_URL,
             courses: courses,
+            coursesJoined: coursesJoined,
           }
         }
       }

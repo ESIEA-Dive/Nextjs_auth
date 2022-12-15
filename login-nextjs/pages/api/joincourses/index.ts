@@ -1,7 +1,7 @@
 import { NextApiRequest, NextApiResponse } from "next"
 import dbConnect from "../../../lib/dbConnect"
 import { ResponseFuncs } from "../../../lib/types"
-import Course from "../../../model/Course"
+import JoinCourse from "../../../model/JoinCourse"
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   //capture request method, we type it as a key of ResponseFunc to reduce typing later
@@ -15,12 +15,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     // RESPONSE POST REQUESTS
     POST: async (req: NextApiRequest, res: NextApiResponse) => {
       await dbConnect() // connect to database
-      return res.json(await Course.create(req.body).catch(catcher))
-    },
-    // RESPONSE GET REQUESTS
-    GET: async (req: NextApiRequest, res: NextApiResponse) => {
-      await dbConnect() // connect to database
-      return res.json(await Course.find().catch(catcher))
+      return res.json(await JoinCourse.create(req.body).catch(catcher))
     },
   }
 

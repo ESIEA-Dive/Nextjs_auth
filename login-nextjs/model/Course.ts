@@ -3,11 +3,15 @@ import mongoose from "mongoose";
 const Schema = mongoose.Schema;
 
 const courseSchema = new Schema({
-    userId: {
+    teacherId: {
         type: String,
         required: true,
     },
-    userImage: {
+    teacherImage: {
+        type: String,
+        required: true,
+    },
+    teacherName:  {
         type: String,
         required: true,
     },
@@ -35,11 +39,11 @@ const courseSchema = new Schema({
         type: String,
         required: true,
     },
-    teacher: {
-        type: String,
+    places: {
+        type: Number,
         required: true,
     },
-    places: {
+    participants: {
         type: Number,
         required: true,
     },

@@ -1,7 +1,7 @@
 import { NextApiRequest, NextApiResponse } from "next"
 import dbConnect from "../../../../lib/dbConnect"
 import { ResponseFuncs } from "../../../../lib/types"
-import Course from "../../../../model/Course";
+import JoinCourse from "../../../../model/JoinCourse";
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   //capture request method, we type it as a key of ResponseFunc to reduce typing later
@@ -18,17 +18,17 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     // RESPONSE FOR GET REQUESTS
     GET: async (req: NextApiRequest, res: NextApiResponse) => {
       await dbConnect() // connect to database
-      return res.json(await Course.find({teacherId: id}).catch(catcher))
+      return res.json(await JoinCourse.find({studentId: id}).catch(catcher))
     },
     // RESPONSE PUT REQUESTS
     PUT: async (req: NextApiRequest, res: NextApiResponse) => {
       await dbConnect() // connect to database
-      return res.json(await Course.findByIdAndUpdate(id, req.body, { new: true }).catch(catcher))
+      return res.json(await JoinCourse.findByIdAndUpdate(id, req.body, { new: true }).catch(catcher))
     },
     // RESPONSE FOR DELETE REQUESTS
     DELETE: async (req: NextApiRequest, res: NextApiResponse) => {
       await dbConnect() // connect to database
-      return res.json(await Course.findByIdAndRemove(id).catch(catcher))
+      return res.json(await JoinCourse.findByIdAndRemove(id).catch(catcher))
     },
   }
 
