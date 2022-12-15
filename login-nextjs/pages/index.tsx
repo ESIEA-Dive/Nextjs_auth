@@ -18,10 +18,10 @@ function Home(props: ShowProps) {
   const [valueTitle, setValueTitle] = useState("");
   const [valueDate, setValueDate] = useState("");
   const [valueDuration, setValueDuration] = useState("");
-  const [valuePrice, setValuePrice] = useState();
+  const [valuePrice, setValuePrice] = useState<number | undefined>(undefined);
   const [valueDescription, setValueDescription] = useState("");
   const [valuePillar, setValuePillar] = useState("Emotional");
-  const [valuePlaces, setValuePlaces] = useState();
+  const [valuePlaces, setValuePlaces] = useState<number | undefined>(undefined);
 
   const [searchField, setSearchField] = useState("");
   const [courses, setCourses] = useState(props.courses);
@@ -34,11 +34,10 @@ function Home(props: ShowProps) {
   const [myCoursesSection, setMyCoursesSection] = useState(false);
 
   const [editCourseMode, setEditCourseMode] = useState(false);
-  const [courseToEdit, setCourseToEdit] = useState();
+  const [courseToEdit, setCourseToEdit] = useState<any | undefined>(undefined);
 
-  const updateCourse = async () => {
-    const newCourse = [{
-      ...courseToEdit,
+  const updateCourse = async (course: any) => {
+    const newCourse = {
       teacherId: session?.user?.id,
       teacherImage: session?.user?.image,
       teacherName: session?.user?.name,
@@ -49,26 +48,26 @@ function Home(props: ShowProps) {
       description: valueDescription,
       pillar: valuePillar,
       places: valuePlaces,
-    }]
-    const res = await fetch(props.url + "courses/" + courseToEdit._id, {
+      participants: course.participants,
+    }
+    const res = await fetch(props.url + "courses/" + course._id, {
       method: "put",
       headers: {
         "Content-Type": "application/json",
       },
       body: JSON.stringify(newCourse),
     })
-    const result = await res.json();
     if (res.status === 200) {
-      for (let x = 0; x < courses.length; x++) {
-        if (courses[x]._id === courseToEdit._id)
-          delete courses[x];
-      }
-      const newCourse = [].concat(courses, result);
-      setCourses(newCourse);
-      setCoursesForSearch(newCourse);
+      const res2 = await fetch(props.url + "courses/teacher/" + session?.user?.id, {
+        method: "get",
+      })
+      const newCourses = await res2.json();
+      setCourses(newCourses);
+      setCoursesForSearch(newCourses);
     }
+    cleanEditForm();
   }
-   
+
   const fillEditForm = (course: any) => {
     setValueTitle(course.title);
     setValueDate(course.date);
@@ -81,8 +80,20 @@ function Home(props: ShowProps) {
     setEditCourseMode(true);
   }
 
+  const cleanEditForm = () => {
+    setValueTitle("");
+    setValueDate("");
+    setValueDuration("");
+    setValuePrice(undefined);
+    setValueDescription("");
+    setValuePillar("Emotional");
+    setValuePlaces(undefined);
+    setCourseToEdit(undefined);
+    setEditCourseMode(false);
+  }
+
   const createCourse = async () => {
-    const newCourse = [{
+    const newCourse = {
       teacherId: session?.user?.id,
       teacherImage: session?.user?.image,
       teacherName: session?.user?.name,
@@ -94,7 +105,7 @@ function Home(props: ShowProps) {
       pillar: valuePillar,
       places: valuePlaces,
       participants: 0,
-    }]
+    }
     const res = await fetch(props.url + "courses/", {
       method: "post",
       headers: {
@@ -108,6 +119,7 @@ function Home(props: ShowProps) {
       setCourses(newCourse);
       setCoursesForSearch(newCourse);
     }
+    cleanEditForm();
   }
 
   const searchForCourses = (value: string) => {
@@ -151,10 +163,10 @@ function Home(props: ShowProps) {
   }
 
   const joinCourse = async (course: any) => {
-    const joinCourse = [{
+    const joinCourse = {
       studentId: session?.user?.id,
       courseId: course._id,
-    }]
+    }
     const res = await fetch(props.url + "joincourses/", {
       method: "post",
       headers: {
@@ -301,15 +313,14 @@ function Home(props: ShowProps) {
           </VStack>
           <ModalCloseButton />
           <ModalFooter>
-
-            <Button colorScheme='teal' mr={4} onClick={() => { 
-              if(editCourseMode) updateCourse(); 
-              else{createCourse();}
-              onCreateClose(); 
-              }}>
+            <Button colorScheme='teal' mr={4} onClick={() => {
+              if (editCourseMode) updateCourse(courseToEdit);
+              else { createCourse(); }
+              onCreateClose();
+            }}>
               Validate
             </Button>
-            <Button variant='ghost' onClick={onCreateClose} >
+            <Button variant='ghost' onClick={() => { onCreateClose(); cleanEditForm(); }} >
               Close
             </Button>
           </ModalFooter>
@@ -378,7 +389,7 @@ function Home(props: ShowProps) {
               <CardFooter>
                 <Flex style={{ width: "100%" }} justifyContent={"space-between"}>
                   {props.user.status === "Teacher" && (<ButtonGroup spacing=''>
-                    <Button onClick={() => {fillEditForm(course); onCreateOpen()}} variant='solid' colorScheme='blue'>
+                    <Button onClick={() => { fillEditForm(course); onCreateOpen() }} variant='solid' colorScheme='blue'>
                       Edit
                     </Button>
                     <Button variant='ghost' colorScheme='red' onClick={() => { setIdCourseToDelete(course._id); onDeleteOpen() }}>
@@ -386,10 +397,10 @@ function Home(props: ShowProps) {
                     </Button>
                   </ButtonGroup>)}
                   {props.user.status === "Student" && (<ButtonGroup spacing=''>
-                    {(!myCoursesSection && (coursesJoined.some((x: { _id: string; }) => x._id === course._id )) === false) && (<Button variant='solid' colorScheme='blue' onClick={() => { joinCourse(course) }}>
+                    {(!myCoursesSection && (coursesJoined.some((x: { _id: string; }) => x._id === course._id)) === false) && (<Button variant='solid' colorScheme='blue' onClick={() => { joinCourse(course) }}>
                       Join
                     </Button>)}
-                    {(!myCoursesSection && (coursesJoined.some((x: { _id: string; }) => x._id === course._id )) === true) && (<Button variant='solid' colorScheme='red' onClick={() => { leaveCourse(course) }}>
+                    {(!myCoursesSection && (coursesJoined.some((x: { _id: string; }) => x._id === course._id)) === true) && (<Button variant='solid' colorScheme='red' onClick={() => { leaveCourse(course) }}>
                       Leave
                     </Button>)}
                     {myCoursesSection && (<Button variant='solid' colorScheme='red' onClick={() => { leaveCourse(course) }}>
@@ -424,7 +435,6 @@ function Home(props: ShowProps) {
 };
 
 export default Home;
-
 
 export async function getServerSideProps(context: any) {
   const session = await getSession(context);
