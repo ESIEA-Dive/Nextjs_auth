@@ -33,6 +33,54 @@ function Home(props: ShowProps) {
   const [coursesJoinedForSearch, setCoursesJoinedForSearch] = useState(props.coursesJoined);
   const [myCoursesSection, setMyCoursesSection] = useState(false);
 
+  const [editCourseMode, setEditCourseMode] = useState(false);
+  const [courseToEdit, setCourseToEdit] = useState();
+
+  const updateCourse = async () => {
+    const newCourse = [{
+      ...courseToEdit,
+      teacherId: session?.user?.id,
+      teacherImage: session?.user?.image,
+      teacherName: session?.user?.name,
+      title: valueTitle,
+      date: valueDate,
+      duration: valueDuration,
+      price: valuePrice,
+      description: valueDescription,
+      pillar: valuePillar,
+      places: valuePlaces,
+    }]
+    const res = await fetch(props.url + "courses/" + courseToEdit._id, {
+      method: "put",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(newCourse),
+    })
+    const result = await res.json();
+    if (res.status === 200) {
+      for (let x = 0; x < courses.length; x++) {
+        if (courses[x]._id === courseToEdit._id)
+          delete courses[x];
+      }
+      const newCourse = [].concat(courses, result);
+      setCourses(newCourse);
+      setCoursesForSearch(newCourse);
+    }
+  }
+   
+  const fillEditForm = (course: any) => {
+    setValueTitle(course.title);
+    setValueDate(course.date);
+    setValueDuration(course.duration);
+    setValuePrice(course.price);
+    setValueDescription(course.description);
+    setValuePillar(course.pillar);
+    setValuePlaces(course.places);
+    setCourseToEdit(course);
+    setEditCourseMode(true);
+  }
+
   const createCourse = async () => {
     const newCourse = [{
       teacherId: session?.user?.id,
@@ -253,7 +301,12 @@ function Home(props: ShowProps) {
           </VStack>
           <ModalCloseButton />
           <ModalFooter>
-            <Button colorScheme='teal' mr={4} onClick={() => { createCourse(); onCreateClose(); }}>
+
+            <Button colorScheme='teal' mr={4} onClick={() => { 
+              if(editCourseMode) updateCourse(); 
+              else{createCourse();}
+              onCreateClose(); 
+              }}>
               Validate
             </Button>
             <Button variant='ghost' onClick={onCreateClose} >
@@ -325,7 +378,7 @@ function Home(props: ShowProps) {
               <CardFooter>
                 <Flex style={{ width: "100%" }} justifyContent={"space-between"}>
                   {props.user.status === "Teacher" && (<ButtonGroup spacing=''>
-                    <Button variant='solid' colorScheme='blue'>
+                    <Button onClick={() => {fillEditForm(course); onCreateOpen()}} variant='solid' colorScheme='blue'>
                       Edit
                     </Button>
                     <Button variant='ghost' colorScheme='red' onClick={() => { setIdCourseToDelete(course._id); onDeleteOpen() }}>
