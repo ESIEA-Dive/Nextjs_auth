@@ -27,7 +27,7 @@ function Navbar() {
 
         <NextLink href={"/profile"}>
           <VStack spacing={0} opacity={0.6} _hover={{ cursor: "pointer", opacity: "1" }} marginInline={5}>
-            <Avatar style={{ width: '24px', height: '24px' }} name={session.user?.name || "default_avatar"} src={session.user?.image || 'https://cdn-icons-png.flaticon.com/512/149/149071.png'} />
+            <Avatar style={{ width: '24px', height: '24px' }} name={session.user?.name || "default_avatar"} src={session.user?.image || undefined} />
             <Text fontWeight={600} marginInline={5} color="black" fontSize={20}>Profile</Text>
           </VStack>
         </NextLink>

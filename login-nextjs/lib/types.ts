@@ -15,6 +15,7 @@ export interface User {
   image: string,
   filledForm: boolean,
   status: string,
+  nationality: string,
 }
 
 // Interface to define our Course model on the frontend

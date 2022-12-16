@@ -22,10 +22,10 @@ function Home(props: ShowProps) {
   const [valueTitle, setValueTitle] = useState("");
   const [valueDate, setValueDate] = useState("");
   const [valueDuration, setValueDuration] = useState("");
-  const [valuePrice, setValuePrice] = useState<number | undefined>(undefined);
+  const [valuePrice, setValuePrice] = useState("");
   const [valueDescription, setValueDescription] = useState("");
   const [valuePillar, setValuePillar] = useState("Emotional");
-  const [valuePlaces, setValuePlaces] = useState<number | undefined>(undefined);
+  const [valuePlaces, setValuePlaces] = useState("");
 
   const [searchField, setSearchField] = useState("");
   const [courses, setCourses] = useState(props.courses);
@@ -38,7 +38,7 @@ function Home(props: ShowProps) {
   const [myCoursesSection, setMyCoursesSection] = useState(false);
 
   const [editCourseMode, setEditCourseMode] = useState(false);
-  const [courseToEdit, setCourseToEdit] = useState<any | undefined>(undefined);
+  const [courseToEdit, setCourseToEdit] = useState();
 
   const updateCourse = async (course: any) => {
     const newCourse = {
@@ -88,26 +88,25 @@ function Home(props: ShowProps) {
     setValueTitle("");
     setValueDate("");
     setValueDuration("");
-    setValuePrice(undefined);
+    setValuePrice("");
     setValueDescription("");
     setValuePillar("Emotional");
-    setValuePlaces(undefined);
-    setCourseToEdit(undefined);
+    setValuePlaces("");
     setEditCourseMode(false);
   }
 
   const createCourse = async () => {
     const newCourse = {
-      teacherId: session?.user?.id,
-      teacherImage: session?.user?.image,
-      teacherName: session?.user?.name,
-      title: valueTitle,
-      date: valueDate,
-      duration: valueDuration,
-      price: valuePrice,
-      description: valueDescription,
-      pillar: valuePillar,
-      places: valuePlaces,
+      teacherId: String(session?.user?.id),
+      teacherImage: String(session?.user?.image),
+      teacherName: String(session?.user?.name),
+      title: String(valueTitle),
+      date: String(valueDate),
+      duration: String(valueDuration),
+      price: Number(valuePrice),
+      description: String(valueDescription),
+      pillar: String(valuePillar),
+      places: Number(valuePlaces),
       participants: 0,
     }
     const res = await fetch(props.url + "courses/", {
@@ -160,7 +159,7 @@ function Home(props: ShowProps) {
       method: "delete",
     })
     if (res.status === 200) {
-      const result = props.courses.filter((x: { _id: string; }) => !x._id.toLowerCase().includes(id.toLowerCase()));
+      const result = courses.filter((x: { _id: string; }) => !x._id.toLowerCase().includes(id.toLowerCase()));
       setCourses(result);
       setCoursesForSearch(result);
     }
@@ -324,7 +323,7 @@ function Home(props: ShowProps) {
           <ModalFooter>
             <Button colorScheme='teal' mr={4} onClick={() => {
               if (editCourseMode) updateCourse(courseToEdit);
-              else { createCourse(); }
+              else { createCourse() }
               onCreateClose();
             }}>
               Validate
@@ -379,8 +378,8 @@ function Home(props: ShowProps) {
                   <Flex flex='1' gap='4' alignItems='center' flexWrap='wrap'>
                     <Avatar name={course.teacherName} src={course.teacherImage} />
                     <Box>
-                      <Heading size='sm'>{course.teacherName}</Heading>
-                      <Text>{course.title}</Text>
+                      <Heading size='sm' maxWidth={170} noOfLines={1}>{course.teacherName}</Heading>
+                      <Text maxWidth={170} noOfLines={1}>{course.title}</Text>
                     </Box>
                   </Flex>
                   <Flex mt={3}>
@@ -411,7 +410,7 @@ function Home(props: ShowProps) {
                           width: '24px',
                         }}
                       />
-                      <Text fontSize={14}>
+                      <Text fontSize={12}>
                         {course.date.split('T')[0]}
                       </Text>
                       <Text fontSize={12} fontWeight={600} mt={-4}>
@@ -525,7 +524,7 @@ export async function getServerSideProps(context: any) {
         }
       }
       else {
-        const resultCourses = await fetch(process.env.API_URL + "courses", {
+        const resultCourses = await fetch(process.env.API_URL + "courses/", {
           method: "get",
         });
         const courses = await resultCourses.json();

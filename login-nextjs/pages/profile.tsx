@@ -35,13 +35,16 @@ const pictos = [
 interface ShowProps {
     user: any
     url: string
+    userForm: any
 }
 
 function Profile(props: ShowProps) {
 
     const { data: session } = useSession();
     const [user, setUser] = useState(props.user);
+    const [userForm, setUserForm] = useState(props.userForm);
 
+    const [valueNationality, setValueNationality] = useState(user.nationality || "unknown");
     const { isOpen, onOpen, onClose } = useDisclosure();
     const [imgIndex, setImgIndex] = useState(0);
     const [pictoSelected, setPictoSelected] = useState(user.image || session?.user?.image || pictos[0].url);
@@ -95,6 +98,18 @@ function Profile(props: ShowProps) {
             })
             setUser(newUser);
         }
+    }
+
+    const updateNationality = async (value: string) => {
+        const newUser = { ...user, nationality: value };
+        await fetch(props.url + "users/" + user._id, {
+            method: "put",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify(newUser),
+        })
+        setUser(newUser);
     }
 
     return (
@@ -159,25 +174,25 @@ function Profile(props: ShowProps) {
                             objectFit='cover'
                             mt={5}
                         />
-                        <Button leftIcon={<Icon as={ImFilePicture} style={{width: '20px', height:'20px'}}/>} onClick={onOpen} colorScheme='teal' size='md'>
+                        <Button leftIcon={<Icon as={ImFilePicture} style={{ width: '20px', height: '20px' }} />} onClick={onOpen} colorScheme='teal' size='md'>
                             Change picture
                         </Button>
                         <Text color="black" fontWeight='500' fontSize={24}>{user.status}</Text>
-                        <Text color="gray" fontSize={18}>University</Text>
+                        {user.status === "Student" && (<Text color="gray" fontSize={18}>{userForm.qstUniversity}</Text>)}
                     </VStack>
                     <Flex justifyContent='left' style={{
                         width: '65%',
                         alignItems: 'left',
                         marginLeft: '5%',
                         border: '1px solid #D3D3D3',
-                        borderRadius: '8px', 
+                        borderRadius: '8px',
                         backgroundColor: '#f3f5f5',
                         flexDirection: 'column',
                         paddingLeft: '8px'
                     }}>
-                    <HStack spacing='24px' style={{
+                        <HStack spacing='24px' style={{
                             marginTop: '15px',
-                            
+
                         }}>
                             <Text color="gray" fontSize={18} fontWeight='500'>Name</Text>
                             {!editName && (<Text color="teal" fontSize={15}>{valueName}</Text>)}
@@ -187,7 +202,7 @@ function Profile(props: ShowProps) {
                         </HStack>
                         <HStack spacing='24px' style={{
                             marginTop: '15px',
-                            
+
                         }}>
                             <Text color="gray" fontSize={18} fontWeight='500'>Email</Text>
                             {!editEmail && (<Text color="teal" fontSize={15}>{valueEmail}</Text>)}
@@ -200,7 +215,22 @@ function Profile(props: ShowProps) {
                             marginBottom: '15px'
                         }}>
                             <Text color="gray" fontSize={18} fontWeight='500'>Nationality</Text>
-                            <Select fontSize={15} color='teal' borderWidth={1} borderColor='gray' borderRadius='7px' focusBorderColor='teal.500' size='xs' width='30%'>
+                            <Select
+                                fontSize={15}
+                                color='teal'
+                                borderWidth={1}
+                                borderColor='gray'
+                                borderRadius='7px'
+                                focusBorderColor='teal.500'
+                                size='xs'
+                                width='30%'
+                                value={valueNationality}
+                                onChange={(e: any) => {
+                                    setValueNationality(e.target.value);
+                                    updateNationality(e.target.value);
+                                }}
+                                placeholder={valueNationality}
+                            >
                                 <option>French</option>
                                 <option>American</option>
                                 <option>Russian</option>
@@ -216,6 +246,7 @@ function Profile(props: ShowProps) {
                                 <option>Chinese</option>
                                 <option>Japanese</option>
                                 <option>Corean</option>
+                                <option>Algerian</option>
                             </Select>
                         </HStack>
                     </Flex>
@@ -241,10 +272,15 @@ export async function getServerSideProps(context: any) {
                 props: {},
             }
         else {
+            const res2 = await fetch(process.env.API_URL + "form/" + session?.user?.id, {
+                method: 'get'
+            });
+            const userForm = await res2.json()
             return {
                 props: {
                     user: user,
-                    url: process.env.API_URL
+                    url: process.env.API_URL,
+                    userForm: userForm
                 }
             }
         }
