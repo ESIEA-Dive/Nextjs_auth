@@ -4,7 +4,7 @@ import { useState } from "react";
 import { SearchIcon } from '@chakra-ui/icons'
 import { GrGroup, GrCalendar } from 'react-icons/gr';
 import { FiClock } from 'react-icons/fi';
-import { MdOutlineCategory, MdFilterList } from 'react-icons/md';
+import { MdOutlineCategory, MdFilterList, MdOutlineCalendarToday } from 'react-icons/md';
 
 
 // Define Prop Interface
@@ -405,7 +405,7 @@ function Home(props: ShowProps) {
                   <HStack justifyContent='space-between'>
                     <VStack spacing={0}>
                       <Icon
-                        as={GrCalendar}
+                        as={MdOutlineCalendarToday}
                         style={{
                           height: '24px',
                           width: '24px',

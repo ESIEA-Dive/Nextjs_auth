@@ -1,7 +1,8 @@
 import { useState } from "react"
-import { Input, Heading, Text, Container, Center, VStack, Button, useDisclosure, Modal, ModalOverlay, ModalContent, ModalHeader, ModalCloseButton, ModalFooter, Image, HStack } from "@chakra-ui/react";
+import { Input, Heading, Text, Container, Center, VStack, Button, useDisclosure, Modal, ModalOverlay, ModalContent, ModalHeader, ModalCloseButton, ModalFooter, Image, HStack, Divider, Flex, Select, Icon } from "@chakra-ui/react";
 import { useSession, getSession } from "next-auth/react";
 import { EditIcon, CheckIcon } from "@chakra-ui/icons";
+import { ImFilePicture } from "react-icons/im";
 
 const pictos = [
     {
@@ -98,77 +99,128 @@ function Profile(props: ShowProps) {
 
     return (
         <Container>
-            <Center>
-                <Modal isOpen={isOpen} onClose={onClose}>
-                    <ModalOverlay />
-                    <ModalContent>
-                        <ModalHeader>Select a picture</ModalHeader>
-                        <HStack mx="auto" flexWrap={"wrap"} justifyContent="center">
-                            {pictos.map((picto, index) => (<Image
-                                key={index}
-                                src={picto.url}
-                                alt='picto'
-                                boxSize="100px"
-                                borderRadius="full"
-                                border={index === imgIndex ? "3px solid teal" : ""}
-                                onClick={() => { setImgIndex(index); setPictoSelected(picto.url); }}
-                                cursor="pointer"
-                                mt={5}
-                                mb={5}
-                                objectFit='cover'
-                            />))}
+            <Modal isOpen={isOpen} onClose={onClose}>
+                <ModalOverlay />
+                <ModalContent>
+                    <ModalHeader>Select a picture</ModalHeader>
+                    <HStack mx="auto" flexWrap={"wrap"} justifyContent="center">
+                        {pictos.map((picto, index) => (<Image
+                            key={index}
+                            src={picto.url}
+                            alt='picto'
+                            boxSize="100px"
+                            borderRadius="full"
+                            border={index === imgIndex ? "3px solid teal" : ""}
+                            onClick={() => { setImgIndex(index); setPictoSelected(picto.url); }}
+                            cursor="pointer"
+                            mt={5}
+                            mb={5}
+                            objectFit='cover'
+                        />))}
+                    </HStack>
+                    <ModalCloseButton />
+                    <ModalFooter>
+                        <Image
+                            src={pictoSelected}
+                            alt='picto'
+                            boxSize="30px"
+                            borderRadius="full"
+                            border="1px solid teal"
+                            marginBlock={4}
+                            mr={4}
+                            objectFit='cover'
+                        />
+                        <Button colorScheme='teal' mr={4} onClick={() => { updatePicture(); onClose(); }}>
+                            Validate
+                        </Button>
+                        <Button variant='ghost' onClick={onClose} >
+                            Close
+                        </Button>
+                    </ModalFooter>
+                </ModalContent>
+            </Modal>
+            <VStack>
+                <Heading>Profile</Heading>
+                <HStack spacing={5} style={{
+                    width: '100vh',
+                    marginInline: '5vh',
+
+                }}>
+                    <VStack style={{
+                        width: '35%',
+                        alignItems: 'center'
+                    }}>
+                        <Image
+                            src={userPicture}
+                            alt='picture'
+                            boxSize="200px"
+                            borderRadius="full"
+                            mx="auto"
+                            objectFit='cover'
+                            mt={5}
+                        />
+                        <Button leftIcon={<Icon as={ImFilePicture} style={{width: '20px', height:'20px'}}/>} onClick={onOpen} colorScheme='teal' size='md'>
+                            Change picture
+                        </Button>
+                        <Text color="black" fontWeight='500' fontSize={24}>{user.status}</Text>
+                        <Text color="gray" fontSize={18}>University</Text>
+                    </VStack>
+                    <Flex justifyContent='left' style={{
+                        width: '65%',
+                        alignItems: 'left',
+                        marginLeft: '5%',
+                        border: '1px solid #D3D3D3',
+                        borderRadius: '8px', 
+                        backgroundColor: '#f3f5f5',
+                        flexDirection: 'column',
+                        paddingLeft: '8px'
+                    }}>
+                    <HStack spacing='24px' style={{
+                            marginTop: '15px',
+                            
+                        }}>
+                            <Text color="gray" fontSize={18} fontWeight='500'>Name</Text>
+                            {!editName && (<Text color="teal" fontSize={15}>{valueName}</Text>)}
+                            {editName && (<Input value={valueName} onChange={(e: any) => setValueName(e.target.value)} variant="flushed" color='black' focusBorderColor='teal.500' placeholder="New name" size="sm" />)}
+                            {!editName && (<Button onClick={() => { setEditName(true) }} leftIcon={<EditIcon />} colorScheme='teal' variant='solid' size='xs'>Edit</Button>)}
+                            {editName && (<Button onClick={() => { setEditName(false); updateName(); }} leftIcon={<CheckIcon />} colorScheme='teal' variant='solid' paddingInline={6} size='xs'>Valider</Button>)}
                         </HStack>
-                        <ModalCloseButton />
-                        <ModalFooter>
-                            <Image
-                                src={pictoSelected}
-                                alt='picto'
-                                boxSize="30px"
-                                borderRadius="full"
-                                border="1px solid teal"
-                                marginBlock={4}
-                                mr={4}
-                                objectFit='cover'
-                            />
-                            <Button colorScheme='teal' mr={4} onClick={() => { updatePicture(); onClose(); }}>
-                                Validate
-                            </Button>
-                            <Button variant='ghost' onClick={onClose} >
-                                Close
-                            </Button>
-                        </ModalFooter>
-                    </ModalContent>
-                </Modal>
-                <VStack>
-                    <Heading>Profile</Heading>
-                    <Image
-                        src={userPicture}
-                        alt='picture'
-                        boxSize="200px"
-                        borderRadius="full"
-                        mx="auto"
-                        objectFit='cover'
-                        mt={5}
-                    />
-                    <Button onClick={onOpen} colorScheme='teal' size='md'>
-                        Change picture
-                    </Button>
-                    <Text color="gray" fontSize={30}>Name</Text>
-                    <HStack spacing='24px'>
-                        {!editName && (<Text color="teal" fontSize={15}>{valueName}</Text>)}
-                        {editName && (<Input value={valueName} onChange={(e: any) => setValueName(e.target.value)} variant="flushed" placeholder="New name" size="sm" />)}
-                        {!editName && (<Button onClick={() => { setEditName(true) }} leftIcon={<EditIcon />} colorScheme='teal' variant='solid'>Edit</Button>)}
-                        {editName && (<Button onClick={() => { setEditName(false); updateName(); }} leftIcon={<CheckIcon />} colorScheme='teal' variant='solid' paddingInline={6}>Valider</Button>)}
-                    </HStack>
-                    <Text color="gray" fontSize={30}>Email</Text>
-                    <HStack spacing='24px'>
-                        {!editEmail && (<Text color="teal" fontSize={15}>{valueEmail}</Text>)}
-                        {editEmail && (<Input value={valueEmail} onChange={(e: any) => setValueEmail(e.target.value)} variant="flushed" placeholder="New email" size="sm" />)}
-                        {!editEmail && (<Button onClick={() => { setEditEmail(true) }} leftIcon={<EditIcon />} colorScheme='teal' variant='solid'>Edit</Button>)}
-                        {editEmail && (<Button onClick={() => { setEditEmail(false); updateEmail(); }} leftIcon={<CheckIcon />} colorScheme='teal' variant='solid' paddingInline={6}>Valider</Button>)}
-                    </HStack>
-                </VStack>
-            </Center>
+                        <HStack spacing='24px' style={{
+                            marginTop: '15px',
+                            
+                        }}>
+                            <Text color="gray" fontSize={18} fontWeight='500'>Email</Text>
+                            {!editEmail && (<Text color="teal" fontSize={15}>{valueEmail}</Text>)}
+                            {editEmail && (<Input value={valueEmail} onChange={(e: any) => setValueEmail(e.target.value)} variant="flushed" color='black' focusBorderColor='teal.500' placeholder="New email" size="sm" />)}
+                            {!editEmail && (<Button onClick={() => { setEditEmail(true) }} leftIcon={<EditIcon />} colorScheme='teal' variant='solid' size='xs'>Edit</Button>)}
+                            {editEmail && (<Button onClick={() => { setEditEmail(false); updateEmail(); }} leftIcon={<CheckIcon />} colorScheme='teal' variant='solid' paddingInline={6} size='xs'>Valider</Button>)}
+                        </HStack>
+                        <HStack spacing='24px' style={{
+                            marginTop: '15px',
+                            marginBottom: '15px'
+                        }}>
+                            <Text color="gray" fontSize={18} fontWeight='500'>Nationality</Text>
+                            <Select fontSize={15} color='teal' borderWidth={1} borderColor='gray' borderRadius='7px' focusBorderColor='teal.500' size='xs' width='30%'>
+                                <option>French</option>
+                                <option>American</option>
+                                <option>Russian</option>
+                                <option>Spanish</option>
+                                <option>Italian</option>
+                                <option>Morrocan</option>
+                                <option>Mexican</option>
+                                <option>English</option>
+                                <option>Finnish</option>
+                                <option>Swedish</option>
+                                <option>German</option>
+                                <option>Australian</option>
+                                <option>Chinese</option>
+                                <option>Japanese</option>
+                                <option>Corean</option>
+                            </Select>
+                        </HStack>
+                    </Flex>
+                </HStack>
+            </VStack>
         </Container>
     )
 }
