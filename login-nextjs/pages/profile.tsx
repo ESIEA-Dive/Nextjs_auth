@@ -181,9 +181,9 @@ function Profile(props: ShowProps) {
                         }}>
                             <Text color="gray" fontSize={18} fontWeight='500'>Name</Text>
                             {!editName && (<Text color="teal" fontSize={15}>{valueName}</Text>)}
-                            {editName && (<Input value={valueName} onChange={(e: any) => setValueName(e.target.value)} variant="flushed" color='black' focusBorderColor='teal.500' placeholder="New name" size="sm" />)}
+                            {editName && (<Input value={valueName} onChange={(e: any) => setValueName(e.target.value)} variant="flushed" fontSize={15} color='black' focusBorderColor='teal.500' maxWidth='200px' placeholder="New name" size="sm" />)}
                             {!editName && (<Button onClick={() => { setEditName(true) }} leftIcon={<EditIcon />} colorScheme='teal' variant='solid' size='xs'>Edit</Button>)}
-                            {editName && (<Button onClick={() => { setEditName(false); updateName(); }} leftIcon={<CheckIcon />} colorScheme='teal' variant='solid' paddingInline={6} size='xs'>Valider</Button>)}
+                            {editName && (<Button onClick={() => { setEditName(false); updateName(); }} leftIcon={<CheckIcon />} colorScheme='teal' variant='solid' size='xs'>Valider</Button>)}
                         </HStack>
                         <HStack spacing='24px' style={{
                             marginTop: '15px',
@@ -191,9 +191,9 @@ function Profile(props: ShowProps) {
                         }}>
                             <Text color="gray" fontSize={18} fontWeight='500'>Email</Text>
                             {!editEmail && (<Text color="teal" fontSize={15}>{valueEmail}</Text>)}
-                            {editEmail && (<Input value={valueEmail} onChange={(e: any) => setValueEmail(e.target.value)} variant="flushed" color='black' focusBorderColor='teal.500' placeholder="New email" size="sm" />)}
+                            {editEmail && (<Input value={valueEmail} onChange={(e: any) => setValueEmail(e.target.value)} variant="flushed" fontSize={15} color='black' focusBorderColor='teal.500' maxWidth='200px' placeholder="New email" size="sm" />)}
                             {!editEmail && (<Button onClick={() => { setEditEmail(true) }} leftIcon={<EditIcon />} colorScheme='teal' variant='solid' size='xs'>Edit</Button>)}
-                            {editEmail && (<Button onClick={() => { setEditEmail(false); updateEmail(); }} leftIcon={<CheckIcon />} colorScheme='teal' variant='solid' paddingInline={6} size='xs'>Valider</Button>)}
+                            {editEmail && (<Button onClick={() => { setEditEmail(false); updateEmail(); }} leftIcon={<CheckIcon />} colorScheme='teal' variant='solid' size='xs'>Valider</Button>)}
                         </HStack>
                         <HStack spacing='24px' style={{
                             marginTop: '15px',
