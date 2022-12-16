@@ -1,7 +1,8 @@
 import { useSession, getSession } from "next-auth/react";
 import { Input, Flex, Button, Text, Heading, InputRightElement, InputGroup, Modal, ModalOverlay, ModalContent, ModalHeader, ModalCloseButton, ModalFooter, useDisclosure, VStack, Center, HStack, Select, Textarea, Card, CardBody, Image, Stack, Divider, CardFooter, ButtonGroup, Wrap, WrapItem, CardHeader, Avatar, Box, IconButton, list } from "@chakra-ui/react";
 import { useState } from "react";
-import { SearchIcon, StarIcon, SettingsIcon } from '@chakra-ui/icons'
+import { SearchIcon, StarIcon, SettingsIcon, TimeIcon, CalendarIcon } from '@chakra-ui/icons'
+import { IoPeopleOutline } from "react-icons/io5";
 
 // Define Prop Interface
 interface ShowProps {
@@ -317,20 +318,37 @@ function Home(props: ShowProps) {
                   />
                 </Flex>
               </CardHeader>
-              <CardBody >
-                <Stack spacing='1'>
+              <CardBody mt={-10}>
+                <Stack spacing='5' p={4} >
                   <Text>
                     {course.description}
                   </Text>
-                  <Text fontSize={12}>
-                    Date : {course.date} - Duration : {course.duration}
-                  </Text>
-                  <Text fontSize={12}>
-                    {course.participants} / {course.places} capacity
-                  </Text>
-                  <Text fontSize={12}>
-                    PILLAR : {course.pillar}
-                  </Text>
+                  <VStack>
+                    <HStack>
+                      <CalendarIcon color='teal'/>
+                      <Text fontSize={12}>
+                        {course.date}
+                      </Text>
+                    </HStack>
+                    <HStack>
+                      <TimeIcon color='teal'/>
+                      <Text fontSize={12}>
+                        {course.duration}
+                      </Text>
+                    </HStack>
+                    <HStack>
+                      <IoPeopleOutline color='teal'/>
+                      <Text fontSize={12}>
+                        {course.participants} / {course.places}
+                      </Text>
+                    </HStack>
+                    <HStack>
+                      
+                      <Text fontSize={12}>
+                        PILLAR : {course.pillar}
+                      </Text>
+                    </HStack>
+                  </VStack>
                 </Stack>
               </CardBody>
               <Divider />
