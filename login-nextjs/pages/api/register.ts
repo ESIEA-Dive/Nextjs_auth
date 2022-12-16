@@ -67,7 +67,7 @@ export default async function handler(
     name: username,
     email,
     hashedPassword,
-    filledForm: false,
+    filledForm: status === "Teacher" ? true : false,
     status,
   });
 

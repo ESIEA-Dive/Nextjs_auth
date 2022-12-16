@@ -1,8 +1,11 @@
 import { useSession, getSession } from "next-auth/react";
-import { Input, Flex, Button, Text, Heading, InputRightElement, InputGroup, Modal, ModalOverlay, ModalContent, ModalHeader, ModalCloseButton, ModalFooter, useDisclosure, VStack, Center, HStack, Select, Textarea, Card, CardBody, Image, Stack, Divider, CardFooter, ButtonGroup, Wrap, WrapItem, CardHeader, Avatar, Box, IconButton, list } from "@chakra-ui/react";
+import { Input, Icon, Flex, Button, Text, Heading, InputRightElement, InputGroup, Modal, ModalOverlay, ModalContent, ModalHeader, ModalCloseButton, ModalFooter, useDisclosure, VStack, HStack, Select, Textarea, Card, CardBody, Stack, Divider, CardFooter, ButtonGroup, Wrap, WrapItem, CardHeader, Avatar, Box } from "@chakra-ui/react";
 import { useState } from "react";
-import { SearchIcon, StarIcon, SettingsIcon, TimeIcon, CalendarIcon } from '@chakra-ui/icons'
-import { IoPeopleOutline } from "react-icons/io5";
+import { SearchIcon } from '@chakra-ui/icons'
+import { GrGroup, GrCalendar } from 'react-icons/gr';
+import { FiClock } from 'react-icons/fi';
+import { MdOutlineCategory, MdFilterList } from 'react-icons/md';
+
 
 // Define Prop Interface
 interface ShowProps {
@@ -167,6 +170,7 @@ function Home(props: ShowProps) {
     const joinCourse = {
       studentId: session?.user?.id,
       courseId: course._id,
+      favorite: false,
     }
     const res = await fetch(props.url + "joincourses/", {
       method: "post",
@@ -251,18 +255,22 @@ function Home(props: ShowProps) {
   }
 
   return (
-    <Flex direction="column" alignItems="center" justifyContent="center">
-      {props.user.status === "Teacher" && (<Heading mt={10}>My Courses</Heading>)}
-      {props.user.status === "Student" && (<HStack mt={10} spacing={20}>
+    <Flex
+      direction="column"
+      alignItems="center"
+      justifyContent="center"
+    >
+      {props.user.status === "Teacher" && (<Heading>My Courses</Heading>)}
+      {props.user.status === "Student" && (<HStack spacing={20}>
         <Heading
-          color={myCoursesSection ? 'grey' : 'teal'}
+          color={myCoursesSection ? 'lightgrey' : 'black'}
           _hover={{ cursor: 'pointer' }}
           onClick={() => { setMyCoursesSection(false); setSearchField(""); searchForCourses("") }}
         >
           Join Courses
         </Heading>
         <Heading
-          color={myCoursesSection ? 'teal' : 'grey'}
+          color={myCoursesSection ? 'black' : 'lightgrey'}
           _hover={{ cursor: 'pointer' }}
           onClick={() => { setMyCoursesSection(true); setSearchField(""); searchForCourses("") }}
         >
@@ -335,13 +343,26 @@ function Home(props: ShowProps) {
             placeholder='Search for a course'
             value={searchField}
             style={{ border: "1px solid #D3D3D3" }}
+            focusBorderColor='#008080'
             onChange={(e: any) => { setSearchField(e.target.value); searchForCourses(e.target.value) }}
           />
           <InputRightElement>
-            <Button onClick={() => { searchForCourses(searchField) }} rightIcon={<SearchIcon />} variant='solid' colorScheme='blue' pl={2}></Button>
+            <Button onClick={() => { searchForCourses(searchField) }} rightIcon={<SearchIcon />} variant='solid' colorScheme='teal' pl={2}></Button>
           </InputRightElement>
         </InputGroup>
-        <Button onClick={undefined} rightIcon={<SettingsIcon />} variant='solid' colorScheme='blue' pl={2}></Button>
+        <Button onClick={undefined} rightIcon={
+          <Icon
+            as={MdFilterList}
+            style={{
+              height: '24px',
+              width: '24px',
+            }}
+          />
+        }
+          variant='solid'
+          colorScheme='teal'
+          pl={2}
+        />
         {props.user.status === "Teacher" && (<Button onClick={onCreateOpen} ml={10} colorScheme='teal' size='md'>Add course</Button>)}
       </HStack>
       <Wrap
@@ -352,9 +373,9 @@ function Home(props: ShowProps) {
       >{(props.user.status === 'Teacher' ? courses : myCoursesSection ? coursesJoined : courses).map(
         (course: any, index: number) =>
           <WrapItem key={index}>
-            <Card height={350} width={350} style={{ border: "1px solid #D3D3D3" }}>
+            <Card height={350} width={350} style={{ border: "1px solid #D3D3D3", backgroundColor: '#f3f5f5' }}>
               <CardHeader>
-                <Flex>
+                <Flex justifyContent="space-between">
                   <Flex flex='1' gap='4' alignItems='center' flexWrap='wrap'>
                     <Avatar name={course.teacherName} src={course.teacherImage} />
                     <Box>
@@ -362,52 +383,73 @@ function Home(props: ShowProps) {
                       <Text>{course.title}</Text>
                     </Box>
                   </Flex>
-                  <IconButton
-                    variant='ghost'
-                    colorScheme='gray'
-                    aria-label='See menu'
-                    icon={<StarIcon style={{ color: "grey" }} />}
-                  />
+                  <Flex mt={3}>
+                    <Text fontSize={14} fontWeight={600} mr={2}>
+                      {course.participants}/{course.places}
+                    </Text>
+                    <Icon
+                      as={GrGroup}
+                      style={{
+                        height: '24px',
+                        width: '24px',
+                      }}
+                    />
+                  </Flex>
                 </Flex>
               </CardHeader>
               <CardBody mt={-10}>
                 <Stack spacing='5' p={4} >
-                  <Text>
+                  <Text noOfLines={4}>
                     {course.description}
                   </Text>
-                  <VStack>
-                    <HStack>
-                      <CalendarIcon color='teal'/>
-                      <Text fontSize={12}>
-                        {course.date}
+                  <HStack justifyContent='space-between'>
+                    <VStack spacing={0}>
+                      <Icon
+                        as={GrCalendar}
+                        style={{
+                          height: '24px',
+                          width: '24px',
+                        }}
+                      />
+                      <Text fontSize={14}>
+                        {course.date.split('T')[0]}
                       </Text>
-                    </HStack>
-                    <HStack>
-                      <TimeIcon color='teal'/>
-                      <Text fontSize={12}>
-                        {course.duration}
+                      <Text fontSize={12} fontWeight={600} mt={-4}>
+                        {course.date.split('T')[1].split(':')[0]}H{course.date.split('T')[1].split(':')[1]}
                       </Text>
-                    </HStack>
-                    <HStack>
-                      <IoPeopleOutline color='teal'/>
+                    </VStack>
+                    <VStack>
+                      <Icon
+                        as={FiClock}
+                        style={{
+                          height: '24px',
+                          width: '24px',
+                        }}
+                      />
                       <Text fontSize={12}>
-                        {course.participants} / {course.places}
+                        {course.duration.split(':')[0]}H{course.duration.split(':')[1]}
                       </Text>
-                    </HStack>
-                    <HStack>
-                      
+                    </VStack>
+                    <VStack>
+                      <Icon
+                        as={MdOutlineCategory}
+                        style={{
+                          height: '24px',
+                          width: '24px',
+                        }}
+                      />
                       <Text fontSize={12}>
-                        PILLAR : {course.pillar}
+                        {course.pillar}
                       </Text>
-                    </HStack>
-                  </VStack>
+                    </VStack>
+                  </HStack>
                 </Stack>
+                <Divider borderWidth={1} />
               </CardBody>
-              <Divider />
-              <CardFooter>
+              <CardFooter mt={-8}>
                 <Flex style={{ width: "100%" }} justifyContent={"space-between"}>
                   {props.user.status === "Teacher" && (<ButtonGroup spacing=''>
-                    <Button onClick={() => { fillEditForm(course); onCreateOpen() }} variant='solid' colorScheme='blue'>
+                    <Button onClick={() => { fillEditForm(course); onCreateOpen() }} variant='solid' colorScheme='teal'>
                       Edit
                     </Button>
                     <Button variant='ghost' colorScheme='red' onClick={() => { setIdCourseToDelete(course._id); onDeleteOpen() }}>
@@ -415,7 +457,7 @@ function Home(props: ShowProps) {
                     </Button>
                   </ButtonGroup>)}
                   {props.user.status === "Student" && (<ButtonGroup spacing=''>
-                    {(!myCoursesSection && (coursesJoined.some((x: { _id: string; }) => x._id === course._id)) === false) && (<Button variant='solid' colorScheme='blue' onClick={() => { joinCourse(course) }}>
+                    {(!myCoursesSection && (coursesJoined.some((x: { _id: string; }) => x._id === course._id)) === false) && (<Button variant='solid' colorScheme='teal' onClick={() => { joinCourse(course) }}>
                       Join
                     </Button>)}
                     {(!myCoursesSection && (coursesJoined.some((x: { _id: string; }) => x._id === course._id)) === true) && (<Button variant='solid' colorScheme='red' onClick={() => { leaveCourse(course) }}>

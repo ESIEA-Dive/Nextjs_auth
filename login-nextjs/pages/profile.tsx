@@ -140,7 +140,7 @@ function Profile(props: ShowProps) {
                     </ModalContent>
                 </Modal>
                 <VStack>
-                    <Heading  mt={10}>Profile</Heading>
+                    <Heading>Profile</Heading>
                     <Image
                         src={userPicture}
                         alt='picture'
@@ -148,6 +148,7 @@ function Profile(props: ShowProps) {
                         borderRadius="full"
                         mx="auto"
                         objectFit='cover'
+                        mt={5}
                     />
                     <Button onClick={onOpen} colorScheme='teal' size='md'>
                         Change picture

@@ -20,7 +20,7 @@ function form(props: ShowProps) {
 
     const [qstEmotion1, setQstEmotion1] = useState('Not at all');
     const [qstEmotion2, setQstEmotion2] = useState('Not at all');
-    const [qstEmotion3, setQstEmotion3] = useState(1);
+    const [qstEmotion3, setQstEmotion3] = useState(5);
 
     const [qstPhysical1, setQstPhysical1] = useState('Not at all');
     const [qstPhysical2, setQstPhysical2] = useState('Yes');
@@ -36,11 +36,11 @@ function form(props: ShowProps) {
     const [qstSocial2, setQstSocial2] = useState('Not at all');
     const [qstSocial3, setQstSocial3] = useState('Yes');
 
-    const [qstEnvironmental1, setQstEnvironmental1] = useState(1);
+    const [qstEnvironmental1, setQstEnvironmental1] = useState(5);
     const [qstEnvironmental2, setQstEnvironmental2] = useState('Yes');
     const [qstEnvironmental3, setQstEnvironmental3] = useState('Yes');
 
-    const [qstFinancial1, setQstFinancial1] = useState(1);
+    const [qstFinancial1, setQstFinancial1] = useState(5);
     const [qstFinancial2, setQstFinancial2] = useState('Completely disagree');
     const [qstFinancial3, setQstFinancial3] = useState('Yes');
 
@@ -108,14 +108,14 @@ function form(props: ShowProps) {
     return (
         <Center>
             <Box width={'60vw'}>
-                <VStack spacing='40px' pb={4}>
+                <VStack spacing='30px' pb={4}>
                     <Heading>Form</Heading>
-
+                    <Text textAlign='center' fontSize={16} fontWeight={600}>Please, fill the form below in order to know you, and let us build the best environment corresponding to your profile.</Text>
                     <FormControl isRequired>
                         <Center>
                             <FormLabel textAlign='center' as='legend' color="teal" fontSize={15}>What is your university ?</FormLabel>
                         </Center>
-                        <Input placeholder='University name' value={qstUniversity} onChange={(e: any) => setQstUniversity(e.target.value)} />
+                        <Input focusBorderColor='#008080' placeholder='University name' value={qstUniversity} onChange={(e: any) => setQstUniversity(e.target.value)} />
                     </FormControl>
 
 
@@ -140,7 +140,7 @@ function form(props: ShowProps) {
                         <Center>
                             <FormLabel textAlign='center' as='legend' color="teal" fontSize={15}>What sport do you play ?</FormLabel>
                         </Center>
-                        <Input placeholder='Sport' value={qstSport} onChange={(e: any) => setQstSport(e.target.value)} />
+                        <Input focusBorderColor='#008080' placeholder='Sport' value={qstSport} onChange={(e: any) => setQstSport(e.target.value)} />
                     </FormControl>
 
                     <FormControl isRequired>
@@ -158,7 +158,7 @@ function form(props: ShowProps) {
                         <Center>
                             <FormLabel textAlign='center' as='legend' color="teal" fontSize={15}>What is your idol ?</FormLabel>
                         </Center>
-                        <Input placeholder='Idol name' value={qstIdol} onChange={(e: any) => setQstIdol(e.target.value)} />
+                        <Input focusBorderColor='#008080' placeholder='Idol name' value={qstIdol} onChange={(e: any) => setQstIdol(e.target.value)} />
                     </FormControl>
 
                     <Text color="gray" fontSize={30}>Emotional</Text>
@@ -194,7 +194,7 @@ function form(props: ShowProps) {
                             aria-label='slider-ex-6'
                             onChange={setQstEmotion3}
                             min={1} max={10} step={1}
-                            defaultValue={1}
+                            defaultValue={5}
                         >
                             <SliderMark
                                 value={qstEmotion3}
@@ -351,7 +351,7 @@ function form(props: ShowProps) {
                             aria-label='slider-ex-6'
                             onChange={setQstEnvironmental1}
                             min={1} max={10} step={1}
-                            defaultValue={1}
+                            defaultValue={5}
                         >
                             <SliderMark
                                 value={qstEnvironmental1}
@@ -407,7 +407,7 @@ function form(props: ShowProps) {
                             aria-label='slider-ex-6'
                             onChange={setQstFinancial1}
                             min={1} max={10} step={1}
-                            defaultValue={1}
+                            defaultValue={5}
                         >
                             <SliderMark
                                 value={qstFinancial1}

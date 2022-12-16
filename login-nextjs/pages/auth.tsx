@@ -25,14 +25,10 @@ const Background = ({ children }: any) => (
     flex="1 1 auto"
     justifyContent="center"
     alignItems="center"
-    backgroundImage="url('/blurry-gradient-haikei.svg')" // coming from public folder
-    backgroundSize="cover"
-    backgroundRepeat="no-repeat"
-    backgroundPosition="center"
-    backgroundAttachment="fixed"
+    backgroundColor='white'
     width="100%"
     height="100vh"
-    color="white"
+    color="black"
   >
     {children}
   </Box>
@@ -79,7 +75,7 @@ const Auth: NextPage = ({ providers }: any) => {
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [status, setStatus] = useState("Yes");
+  const [status, setStatus] = useState("Student");
 
   const ProvidersButtons = ({ providers }: any) => (
     <Flex direction="column" w="100%">
@@ -157,7 +153,7 @@ const Auth: NextPage = ({ providers }: any) => {
       <Box
         w="420px"
         rounded="md"
-        bgGradient="linear(to-r, #ffffff80, #ffffff20)"
+        bg="#f3f5f5"
         p={12}
       >
         <Flex direction="column" justifyContent="center" alignItems="center">
@@ -197,7 +193,10 @@ const Auth: NextPage = ({ providers }: any) => {
                             value={username}
                             onChange={(e) => setUsername(e.target.value)}
                             placeholder="Username"
-                            background={"blue.600"}
+                            background={"teal.600"}
+                            color='white'
+                            focusBorderColor='black'
+                            _placeholder={{ opacity: 1, color: 'gray.400' }}
                           />
                         </FormControl>
                       )}
@@ -211,7 +210,10 @@ const Auth: NextPage = ({ providers }: any) => {
                           value={email}
                           onChange={(e) => setEmail(e.target.value)}
                           placeholder="Email Address"
-                          background={"blue.600"}
+                          background={"teal.600"}
+                          color='white'
+                          focusBorderColor='black'
+                          _placeholder={{ opacity: 1, color: 'gray.400' }}
                         />
                       </FormControl>
                     )}
@@ -225,7 +227,10 @@ const Auth: NextPage = ({ providers }: any) => {
                           onChange={(e) => setPassword(e.target.value)}
                           type="password"
                           placeholder="Password"
-                          background={"blue.600"}
+                          background={"teal.600"}
+                          color='white'
+                          focusBorderColor='black'
+                          _placeholder={{ opacity: 1, color: 'gray.400' }}
                         />
                       </FormControl>
                     )}
@@ -238,8 +243,8 @@ const Auth: NextPage = ({ providers }: any) => {
                           <RadioGroup onChange={setStatus} value={status}>
                             <Center>
                               <HStack spacing='24px'>
-                                <Radio colorScheme='blackAlpha' value='Student'>Student</Radio>
-                                <Radio colorScheme='blackAlpha' value='Teacher'>Teacher</Radio>
+                                <Radio colorScheme='teal' value='Student'>Student</Radio>
+                                <Radio colorScheme='teal' value='Teacher'>Teacher</Radio>
                               </HStack>
                             </Center>
                           </RadioGroup>
@@ -248,8 +253,8 @@ const Auth: NextPage = ({ providers }: any) => {
                     </Field>)}
                   <Button
                     mt={6}
-                    bg="blue.400"
-                    _hover={{ bg: "blue.200" }}
+                    bg="teal.400"
+                    _hover={{ bg: "teal.200" }}
                     isLoading={props.isSubmitting}
                     type="submit"
                   >
