@@ -21,6 +21,16 @@ const userSchema = new Schema({
   image: {
     type: String,
   },
+  filledForm: {
+    type: Boolean
+  },
+  status: {
+    type: String,
+    required: true,
+  },
+  nationality: {
+    type: String,
+  }
 });
 
 const User = mongoose.models.User || mongoose.model("User", userSchema);

@@ -52,7 +52,7 @@ export default async function handler(
   }
 
   // get and validate body variables
-  const { username, email, password } = req.body;
+  const { username, email, password, status } = req.body;
 
   const errorMessage = await validateForm(username, email, password);
   if (errorMessage) {
@@ -67,6 +67,8 @@ export default async function handler(
     name: username,
     email,
     hashedPassword,
+    filledForm: status === "Teacher" ? true : false,
+    status,
   });
 
   newUser

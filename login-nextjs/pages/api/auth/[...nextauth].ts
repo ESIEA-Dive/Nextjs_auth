@@ -10,8 +10,8 @@ import { compare } from "bcrypt";
 export default NextAuth({
   providers: [
     GithubProvider({
-      clientId: process.env.GITHUB_ID,
-      clientSecret: process.env.GITHUB_SECRET,
+      clientId: process.env.GITHUB_ID || "",
+      clientSecret: process.env.GITHUB_SECRET || "",
     }),
     // Email & Password
     CredentialsProvider({
@@ -59,6 +59,22 @@ export default NextAuth({
     signIn: "/auth",
   },
   debug: process.env.NODE_ENV === "development",
+  callbacks: {
+    async jwt({ token, user }) {
+      user && (token.user = user)
+      return token
+    },
+    async session({ session, token }) {
+      session = {
+        ...session,
+        user: {
+          id: token.sub,
+          ...session.user
+        }
+      }
+      return session
+    }
+  },
   adapter: MongoDBAdapter(clientPromise),
   session: {
     strategy: "jwt",

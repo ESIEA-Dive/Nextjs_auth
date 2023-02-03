@@ -1,6 +1,6 @@
 import { useState } from "react";
 import type { NextPage } from "next";
-import { useSession, signIn, getProviders } from "next-auth/react";
+import { signIn, getProviders } from "next-auth/react";
 import {
   Button,
   Flex,
@@ -10,6 +10,10 @@ import {
   Box,
   Heading,
   Text,
+  RadioGroup,
+  Center,
+  HStack,
+  Radio,
 } from "@chakra-ui/react";
 import { Field, Form, Formik } from "formik";
 import axios from "axios";
@@ -21,14 +25,10 @@ const Background = ({ children }: any) => (
     flex="1 1 auto"
     justifyContent="center"
     alignItems="center"
-    backgroundImage="url('/blurry-gradient-haikei.svg')" // coming from public folder
-    backgroundSize="cover"
-    backgroundRepeat="no-repeat"
-    backgroundPosition="center"
-    backgroundAttachment="fixed"
+    backgroundColor='white'
     width="100%"
     height="100vh"
-    color="white"
+    color="black"
   >
     {children}
   </Box>
@@ -67,7 +67,6 @@ const Divider = ({ word }: IDivicerProps) => {
 };
 
 const Auth: NextPage = ({ providers }: any) => {
-  const { data: session } = useSession();
   const [authType, setAuthType] = useState("Login");
   const oppAuthType: { [key: string]: string } = {
     Login: "Register",
@@ -76,6 +75,7 @@ const Auth: NextPage = ({ providers }: any) => {
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [status, setStatus] = useState("Student");
 
   const ProvidersButtons = ({ providers }: any) => (
     <Flex direction="column" w="100%">
@@ -105,7 +105,7 @@ const Auth: NextPage = ({ providers }: any) => {
   const redirectToHome = () => {
     const { pathname } = Router;
     if (pathname === "/auth") {
-      // TODO: redirect to a success register page
+      // TODO: redirect to a form to fill
       Router.push("/");
     }
   };
@@ -114,7 +114,7 @@ const Auth: NextPage = ({ providers }: any) => {
     const res = await axios
       .post(
         "/api/register",
-        { username, email, password },
+        { username, email, password, status },
         {
           headers: {
             Accept: "application/json",
@@ -145,7 +145,6 @@ const Auth: NextPage = ({ providers }: any) => {
 
   const formSubmit = (actions: any) => {
     actions.setSubmitting(false);
-
     authType === "Login" ? loginUser() : registerUser();
   };
 
@@ -154,7 +153,7 @@ const Auth: NextPage = ({ providers }: any) => {
       <Box
         w="420px"
         rounded="md"
-        bgGradient="linear(to-r, #ffffff80, #ffffff20)"
+        bg="#f3f5f5"
         p={12}
       >
         <Flex direction="column" justifyContent="center" alignItems="center">
@@ -194,7 +193,10 @@ const Auth: NextPage = ({ providers }: any) => {
                             value={username}
                             onChange={(e) => setUsername(e.target.value)}
                             placeholder="Username"
-                            background={"blue.600"}
+                            background={"teal.600"}
+                            color='white'
+                            focusBorderColor='black'
+                            _placeholder={{ opacity: 1, color: 'gray.400' }}
                           />
                         </FormControl>
                       )}
@@ -208,29 +210,51 @@ const Auth: NextPage = ({ providers }: any) => {
                           value={email}
                           onChange={(e) => setEmail(e.target.value)}
                           placeholder="Email Address"
-                          background={"blue.600"}
+                          background={"teal.600"}
+                          color='white'
+                          focusBorderColor='black'
+                          _placeholder={{ opacity: 1, color: 'gray.400' }}
                         />
                       </FormControl>
                     )}
                   </Field>
                   <Field name="password">
                     {() => (
-                      <FormControl isRequired mb={3}>
+                      <FormControl isRequired mb={6}>
                         <FormLabel htmlFor="password">Password</FormLabel>
                         <Input
                           value={password}
                           onChange={(e) => setPassword(e.target.value)}
                           type="password"
                           placeholder="Password"
-                          background={"blue.600"}
+                          background={"teal.600"}
+                          color='white'
+                          focusBorderColor='black'
+                          _placeholder={{ opacity: 1, color: 'gray.400' }}
                         />
                       </FormControl>
                     )}
                   </Field>
+                  {authType === "Register" && (
+                    <Field name="status">
+                      {() => (
+                        <FormControl isRequired mb={3}>
+                          <FormLabel htmlFor="text">Statut</FormLabel>
+                          <RadioGroup onChange={setStatus} value={status}>
+                            <Center>
+                              <HStack spacing='24px'>
+                                <Radio colorScheme='teal' value='Student'>Student</Radio>
+                                <Radio colorScheme='teal' value='Teacher'>Teacher</Radio>
+                              </HStack>
+                            </Center>
+                          </RadioGroup>
+                        </FormControl>
+                      )}
+                    </Field>)}
                   <Button
                     mt={6}
-                    bg="blue.400"
-                    _hover={{ bg: "blue.200" }}
+                    bg="teal.400"
+                    _hover={{ bg: "teal.200" }}
                     isLoading={props.isSubmitting}
                     type="submit"
                   >
@@ -252,6 +276,7 @@ export async function getServerSideProps() {
   return {
     props: {
       providers: await getProviders(),
+
     },
   };
 }
